@@ -162,12 +162,10 @@ function volumePercentage(symbol, value)
         volumeAverage.html(increase);
         var threshold = $('#volume-threshold').val();
         if (threshold === "") {
-            console.log("1");
             if (new Number(increase) < 1) {
                 $('#symbol-'+symbol).addClass('d-none');
             }
         } else {
-            console.log("2");
             if (new Number(increase) < threshold) {
                 $('#symbol-'+symbol).addClass('d-none');
             }
@@ -378,8 +376,6 @@ function collectValues(symbol, value)
                     }
                     collectValues(e.s, e.c);
                 });
-                
-                //  d-none$('.sort').trigger('click');
             }
         };
 
@@ -563,8 +559,6 @@ function collectValues(symbol, value)
                 $('#symbol-'+symbol).addClass('d-none');
             }
         });
-
-        // $('#toggle-settings').trigger('click');
         $('#search').attr('disabled', false);
         $('.custom-symbols').select2();
 
