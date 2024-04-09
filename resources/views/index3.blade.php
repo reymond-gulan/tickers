@@ -6,7 +6,7 @@
         <form action="{{ route('save-settings') }}" method="POST" id="settings-form">
         @csrf
         <div class="row mt-2">
-            <div class="col-sm-6 p-2 d-none" style="background:#FBC6B1;">
+            <div class="col-sm-2 p-2" style="background:#FBC6B1;">
                 <table class="w-100 bg-transparent">
                     <tr>
                         <th>OPTION BLOCKS</th>
@@ -18,7 +18,31 @@
                     </tr>
                 </table>
             </div>
-            <div class="col-sm-6 p-2" style="background:#FBC6B1;">
+            <div class="col-sm-4 p-2" style="background:#FBC6B1;">
+                <table class="w-100 bg-transparent">
+                    <tr>
+                        <th>QVPS Value</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" class="form border border-dark qvps" name="qvps">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-sm-2 p-2" style="background:#9294C2;">
+                <table class="w-100 bg-transparent">
+                    <tr>
+                        <th colspan="6">VOLUME AVERAGING TIME (seconds)</th>
+                    </tr>
+                    <tr>
+                        <td class="w-50">
+                            <input type="number" class="form border border-dark volume_averaging_time" name="volume_averaging_time">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- <div class="col-sm-6 p-2 d-none" style="background:#FBC6B1;">
                 <table class="w-100 bg-transparent">
                     <tr>
                         <th>&nbsp;</th>
@@ -36,8 +60,8 @@
                         </td>
                     </tr>
                 </table>
-            </div>
-            <div class="col-sm-4 p-2" style="background:#9294C2;">
+            </div> -->
+            <div class="col-sm-2 p-2" style="background:#9294C2;">
                 <table class="w-100 bg-transparent">
                     <tr>
                         <th colspan="6">LIVE PRICE AVERAGING (seconds)</th>
@@ -78,8 +102,9 @@
                 <input type="text" class="form price_filter border border-dark" name="price_filter" id="price_filter" placeholder="PRICE FILTER">
             </div>
             <div class="col-sm-1 p-0 px-2 d-none">
-                <input type="hidden" class="form text-sm symbol border border-dark" id="symbol" readonly>
-                <input type="hidden" class="form text-sm symbol border border-dark" id="status" readonly>
+                <input type="text" class="form text-sm symbol border border-dark" id="symbol" readonly>
+                <input type="text" class="form text-sm symbol border border-dark" id="status" readonly>
+                <input type="text" class="form text-sm symbol border border-dark" id="collection_status">
             </div>
             <div class="col-sm-2 p-0">
                 <button type="submit" class="btn btn-primary p-0 py-1 text-sm w-100" id="search" disabled>SEARCH</button>
@@ -91,17 +116,23 @@
                 <button type="button" class="btn btn-success p-0 py-1 text-sm w-100 d-none" id="start">START <span id="elapsed"></span></button>
             </div>
             <div class="col-sm-1 p-0 d-none">
+                <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="start-initial">INITIAL</button>
+                <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="stop-initial">STOP INITIAL</button>
+                <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="start-final">FINAL</button>
+                <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="stop-final">STOP INITIAL</button>
+                <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="restart">RESTART</button>
+                <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="start-blocks">START BLOCKS</button>
+            </div>
+            <div class="col-sm-1 p-0 d-none">
                 <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="reset">RESET</button>
             </div>
             <div class="col-sm-1 p-0 d-none">
                 <button type="button" class="btn btn-danger p-0 py-1 text-sm w-100 d-none" id="stop">STOP</button>
             </div>
-            <div class="col-sm-3 border border-dark">
-            <div class="elapsed">
+            <div class="col-sm-3 border border-dark elapsed d-none">
                 <center>
                 Time Elapsed <span class="badge badge-success bg-success" id="elapsed"></span>
                 </center>
-            </div>
             </div>
         </div>
         </form>
@@ -155,24 +186,53 @@ $(function(){
 @endif
 <script>
 
-function volumePercentage(symbol, value)
+function volumePercentage()
 {
-    var volumeAverage = $('#symbol-'+symbol+'-volume-average');
-    var average = volumeAverage.html();
-    if (average !== "" && average !== undefined) 
-    {
-        var increase = percentageIncrease(new Number(average), value);
-        volumeAverage.html(increase);
-        var threshold = $('#volume-threshold').val();
-        if (threshold === "") {
-            if (new Number(increase) < 1) {
-                $('#symbol-'+symbol).addClass('d-none');
-            }
-        } else {
-            if (new Number(increase) < threshold) {
-                $('#symbol-'+symbol).addClass('d-none');
-            }
+    var symbols = $('.symbols:not(.d-none)');
+    var averaging_time = $('.volume_averaging_time').val();
+    var qvpsValue = $('.qvps').val();
+    var length = symbols.length;
+    $.each(symbols, function(){
+        length -= 1;
+        var symbol = $(this).data('symbol');
+        var initial = $('#symbol-'+symbol+'-initial-volume-value').html();
+        var final = $('#symbol-'+symbol+'-final-volume-value').html();
+
+        // var qvps = (parseFloat(final) / parseFloat(initial)) / parseInt(averaging_time);
+        var qvps = ((parseFloat(final) / parseFloat(initial)) * 100) / parseInt(averaging_time);
+
+        if (isNaN(qvps) || !isFinite(qvps)) {
+            qvps = 0;
         }
+
+        if (isNaN(qvpsValue) || qvpsValue === undefined) {
+            qvpsValue = 3.99;
+        }
+
+        if (parseFloat(qvps) < parseInt(qvpsValue) || parseFloat(qvps) === 0) {
+            $('#symbol-'+symbol).addClass('d-none');
+        }
+
+        $('#symbol-'+symbol+'-volume-average').html(qvps.toFixed(2));
+
+        if (length < 1) {
+            // Final iteration, check if any token is qualified...
+            checkIfHasQualified();
+        }
+    });
+}
+
+function checkIfHasQualified()
+{
+    var symbols = $('.symbols:not(.d-none)');
+    if (symbols.length > 0) {
+        $('#collection_status').val('price');
+        $('#start').trigger('click');
+        $('#start-blocks').trigger('click');
+    } else {
+        console.log("No token was qualified. Restarting...");
+        $('#collection_status').val('');
+        $('#restart').trigger('click');
     }
 }
 
@@ -182,33 +242,72 @@ function percentageIncrease(initial = 0, final = 0)
     var difference = ((final - initial) / initial);
     var percentage = (difference * 100);
 
-    if (percentage <= -100) {
+    if (percentage <= -100 || isNaN(percentage)) {
         return 0;
     }
+
     return percentage.toFixed(2);
 }
 
-function getAverage(symbol, initial)
+function getAverage(symbol, initial, target)
 {
+    if (target === 'initial_volume' || target === 'final_volume') {
+        var container = $('#symbol-'+symbol+'-volume');
+        var result = $(container).val().split(',');
+        var count = 0;
+        var value = 0;
+        $.each(result, function(i, e){
+            value += parseFloat(e);
+            count += 1;
+        });
+        var increase = (value / count);
+
+        if (isNaN(increase)) {
+            increase = 0;
+        }
+
+        if (target == 'initial_volume') {
+            $('#symbol-'+symbol+'-initial-volume-value').html(increase);
+        } else {
+            $('#symbol-'+symbol+'-final-volume-value').html(increase);
+        }
+        container.val('');
+        return;
+    }
+    
+
     var container = $('#symbol-'+symbol+'-live-price');
+    var liveAveragingTime = $('.live_averaging_time').val();
     var result = $(container).val().split(',');
     var count = 0;
     var value = 0;
     $.each(result, function(i, e){
-        value += new Number(e);
+        value += parseFloat(e);
         count += 1;
     });
+
+    if (isNaN(liveAveragingTime) || liveAveragingTime === undefined || liveAveragingTime == "") {
+        liveAveragingTime = 10;
+    }
+
     var final = (value / count);
-    var increase = percentageIncrease(new Number(initial), new Number(final));
+    var increase = percentageIncrease(parseFloat(initial), parseFloat(final));
+    var qpps = ((parseFloat(final) / parseFloat(initial)) * 100) / parseInt(liveAveragingTime);
+
+    if (isNaN(qpps) || !isFinite(qpps)) {
+        qpps = 0;
+    }
+
+    $('#symbol-'+symbol+'-qpps').html(qpps.toFixed(2));
 
     var blocks = $('#block-count').val();
-    var choice = $('#choice').val();
+    // var choice = $('#choice').val();
     
-    if (choice == 'positive') {
-        $('#table thead').addClass('text-success').removeClass('text-danger');
-    } else {
-        $('#table thead').removeClass('text-success').addClass('text-danger');
-    }
+    // if (choice == 'positive') {
+    //     $('#table thead').addClass('text-success').removeClass('text-danger');
+    // } else {
+    //     $('#table thead').removeClass('text-success').addClass('text-danger');
+    // }
 
     for(i = 1; i <= blocks;)
     {
@@ -223,16 +322,16 @@ function getAverage(symbol, initial)
                 if (parseFloat(increase) == 0) {
                     optionAverage.removeClass('badge bg-success').removeClass('badge bg-danger');
 
-                    if (choice == 'positive') {
-                        $('#symbol-'+symbol).addClass('d-none');
-                    }
+                    // if (choice == 'positive') {
+                    //     $('#symbol-'+symbol).addClass('d-none');
+                    // }
 
                 } else if (parseFloat(previous) < parseFloat(increase)) {
                     optionAverage.addClass('badge bg-success').removeClass('bg-danger');
 
-                    if (choice == 'negative') {
-                        $('#symbol-'+symbol).addClass('d-none');
-                    }
+                    // if (choice == 'negative') {
+                    //     $('#symbol-'+symbol).addClass('d-none');
+                    // }
 
                 } else if (parseFloat(previous) > parseFloat(increase)) {
                     optionAverage.removeClass('bg-success').addClass('badge bg-danger');
@@ -303,7 +402,22 @@ function collectValues(symbol, value)
         container.val(value);
     }
 }
+
+function collectVolume(symbol, value) 
+{
+    var container = $('#symbol-'+symbol+'-volume');
+    var volume = container.val();
+
+    if (volume != "") {
+        container.val(volume+','+value);
+    } else {
+        container.val(value);
+    }
+}
+
     $(function(){
+
+        var interval, startTime, averaging, initialAveraging, finalAveraging;
 
         $('.navbar .container').addClass('d-none');
 
@@ -322,9 +436,9 @@ function collectValues(symbol, value)
         socket.onmessage = function (event) {
             var data = JSON.parse(event.data);
             var status = $('#status').val();
-            
             if (status == 'start') {
                 $.each(data, function(i, e){
+                    var collection_status = $('#collection_status').val();
                     var custom = $('#custom-'+e.s);
 
                     if ($('#symbol-'+e.s+'-price').html() == "") {
@@ -376,21 +490,28 @@ function collectValues(symbol, value)
                     if ($('#symbol-'+e.s+'-price').html() !== undefined && $('#symbol-'+e.s+'-price').html() == "") {
                         $('#symbol-'+e.s+'-price').html(parseFloat(e.c).toFixed(2));
                     }
-                    collectValues(e.s, e.c);
+
+                    if (collection_status === 'volume') {
+                        collectVolume(e.s, e.v);
+                    }
+
+                    if (collection_status === 'price') {
+                        collectValues(e.s, e.c);
+                    }
                 });
             }
         };
 
-        var interval, startTime, averaging;
-
         $(document).on('submit', '#form2', function(e){
-            clearInterval(interval);
-            clearInterval(averaging);
-
             e.preventDefault();
             $('#search').html('Processing...');
             $('#search').attr('disabled', true);
-            $('#start').trigger('click');
+            $('#collection_status').val('volume');
+            $('.elapsed').addClass('d-none');
+            $('.tokens-table').addClass('d-none');
+
+            clearInterval(interval);
+            clearInterval(averaging);
 
             var symbol = $('#symbol-filter').val();
             $('#symbol').val(symbol);
@@ -410,7 +531,8 @@ function collectValues(symbol, value)
                     $('#search').attr('disabled', false);
                     $('#start').removeClass('d-none');
                     $('#stop').removeClass('d-none');
-                    $('#start').trigger('click');
+                    $('#start-initial').trigger('click');
+                    $('#collection_status').val('volume');
                     $('.custom').removeClass('d-none');
                 }, error:function(response){
                     alert("An error occurred. Re-submit request.");
@@ -457,7 +579,17 @@ function collectValues(symbol, value)
             });
         });
 
+        $(document).on('click', '#restart', function(){
+            $('.qualifying_status').html("No token was qualified, restarting...");
+            clearInterval(finalAveraging);
+            clearInterval(initialAveraging);
+            clearInterval(interval);
+            clearInterval(averaging);
+            $('#form2').trigger('submit');
+        });
+
         $(document).on('click', '#start', function(){
+            console.log("Start button triggered...");
             $('#status').val('start');
             $('#start').html('START');
             $('#start').addClass('btn-success').removeClass('btn-warning');
@@ -483,10 +615,14 @@ function collectValues(symbol, value)
                 var elapsed = minutes +':'+ seconds;
                 $('#elapsed').html(elapsed);
             }, 1000);
+        });
 
+        $(document).on('click', '#start-blocks', function(){
             var symbols = $('.symbols');
             var live_averaging_time = $('.live_averaging_time').val();
             var duration;
+            $('.qualifying_status').html($('.symbols:not(.d-none)').length+" tokens qualified...");
+            $('.tokens-table').removeClass('d-none');
 
             if (live_averaging_time == "") {
                 duration = 60000;
@@ -511,6 +647,81 @@ function collectValues(symbol, value)
                     // addRanking();
                 }, duration);
             }
+        });
+
+        $(document).on('click', '#start-initial', function(){
+            $('.qualifying_status').append("Initial volume collection initialized... ");
+            $('#status').val('start');
+            var symbols = $('.symbols');
+            var averaging_time = $('.volume_averaging_time').val();
+            var duration;
+
+            if (averaging_time == "") {
+                duration = 60000;
+            } else {
+                duration = new Number(averaging_time) * 1000;
+            }
+
+            console.log("Duration: "+duration);
+
+            if (symbols.length > 0) {
+                initialAveraging = setInterval(function(){
+                    console.log("Initial volume averaging triggered...");
+
+                    $.each(symbols, function(){
+                        var symbol = $(this).data('symbol');
+                        getAverage(symbol, "", 'initial_volume');
+                    });
+
+                    $('#stop-initial').trigger('click');
+                }, duration);
+            }
+        });
+
+        $(document).on('click', '#stop-initial', function(){
+            console.log("Initial volume collection and averaging stopped... ");
+            clearInterval(initialAveraging);
+            $('#start-final').trigger('click');
+        });
+
+        $(document).on('click', '#start-final', function(){
+            $('.qualifying_status').append("Final volume collection initialized... ");
+            $('#status').val('start');
+            var symbols = $('.symbols');
+            var averaging_time = $('.volume_averaging_time').val();
+            var duration;
+
+            if (averaging_time == "") {
+                duration = 60000;
+            } else {
+                duration = new Number(averaging_time) * 1000;
+            }
+
+            console.log("Duration: "+duration);
+
+            if (symbols.length > 0) {
+                finalAveraging = setInterval(function(){
+                    console.log("Final volume averaging triggered...");
+
+                    $.each(symbols, function(){
+                        var symbol = $(this).data('symbol');
+                        getAverage(symbol, "", 'final_volume');
+                    });
+
+                    $('#stop-final').trigger('click');
+                }, duration);
+            }
+        });
+
+        $(document).on('click', '#stop-final', function(){
+            console.log("Final volume collection and averaging stopped... ");
+            clearInterval(finalAveraging);
+            volumePercentage();
+        });
+
+        $(document).on('click', '.qualifying_status', function(){
+            $('.qualifying_status').html("");
+            $('.qualifying_status').addClass("d-none");
         });
 
         $(document).on('click', '#reset', function(){
@@ -561,6 +772,7 @@ function collectValues(symbol, value)
                 $('#symbol-'+symbol).addClass('d-none');
             }
         });
+
         $('#search').attr('disabled', false);
         $('.custom-symbols').select2();
 
