@@ -185,7 +185,6 @@ function percentageIncrease(initial = 0, final = 0)
     if (percentage <= -100) {
         return 0;
     }
-
     return percentage.toFixed(2);
 }
 
