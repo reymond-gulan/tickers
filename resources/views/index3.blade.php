@@ -492,11 +492,10 @@ function collectVolume(symbol, value)
                     }
 
                     if (collection_status === 'volume') {
-                        collectVolume(e.s, e.v);
-                    }
-
-                    if (collection_status === 'price') {
-                        collectValues(e.s, e.c);
+                        // collectVolume(e.s, parseFloat(e.v)); // Base Asset Volume
+                        collectVolume(e.s, parseFloat(e.q)); // Quote Asset Volume
+                    } else if (collection_status === 'price') {
+                        collectValues(e.s, parseFloat(e.c));
                     }
                 });
             }
