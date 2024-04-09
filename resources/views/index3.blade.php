@@ -81,8 +81,11 @@
                 <input type="hidden" class="form text-sm symbol border border-dark" id="symbol" readonly>
                 <input type="hidden" class="form text-sm symbol border border-dark" id="status" readonly>
             </div>
-            <div class="col-sm-4 p-0">
+            <div class="col-sm-2 p-0">
                 <button type="submit" class="btn btn-primary p-0 py-1 text-sm w-100" id="search" disabled>SEARCH</button>
+            </div>
+            <div class="col-sm-2 p-0">
+                <button type="button" class="btn btn-success p-0 py-1 text-sm w-100" id="sort">SORT </button>
             </div>
             <div class="col-sm-1 p-0 d-none">
                 <button type="button" class="btn btn-success p-0 py-1 text-sm w-100 d-none" id="start">START <span id="elapsed"></span></button>
@@ -504,9 +507,9 @@ function collectValues(symbol, value)
                         getAverage(symbol, initial);
                     });
 
-                    $('.sort').trigger('click');
+                    // $('.sort').trigger('click');
                     priceFilter();
-                    addRanking();
+                    // addRanking();
                 }, duration);
             }
         });
@@ -576,6 +579,11 @@ function collectValues(symbol, value)
         $(document).on('click','.remove-custom', function(){
             var symbol = $(this).data('symbol');
             $('#custom'+symbol).remove();
+        });
+
+        $(document).on('click','#sort', function(){
+            $('.sort').trigger('click');
+            addRanking();
         });
     });
 </script>
