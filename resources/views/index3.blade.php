@@ -6,7 +6,7 @@
         <form action="{{ route('save-settings') }}" method="POST" id="settings-form">
         @csrf
         <div class="row mt-2">
-            <div class="col-sm-6 p-2 d-none" style="background:#FBC6B1;">
+            <div class="col-sm-6 p-2" style="background:#FBC6B1;">
                 <table class="w-100 bg-transparent">
                     <tr>
                         <th>OPTION BLOCKS</th>
