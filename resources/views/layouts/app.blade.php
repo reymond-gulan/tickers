@@ -98,6 +98,9 @@
         border:1px solid #000;
         border-radius:0;
     }
+    .h-25{
+        height:25px !important;
+    }
 </style>
 <body>
     <div id="app">
@@ -133,6 +136,9 @@
                             @endif
                             <li class="nav-item">
                                 <a class="nav-link" target="_blank" href="/collect">Collect&nbsp;Data</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" target="_blank" href="/batch">Batch</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="toggle-settings" href="#">Settings</a>

@@ -1,173 +1,146 @@
 @extends('layouts.app')
 @section('content')
-<div class="container-fluid w-100 bg-white">
-    <div class="col-sm-12">
-        <!--- BODY *** start *** -->
-        <form action="{{ route('save-settings') }}" method="POST" id="settings-form">
-        @csrf
-        <div class="row mt-2">
-            <div class="col-sm-2 p-2" style="background:#FBC6B1;">
-                <table class="w-100 bg-transparent">
-                    <tr>
-                        <th>OPTION BLOCKS</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="number" class="form border border-dark options" name="options" value="20">
-                        </td>
-                    </tr>
-                </table>
+<div class="container-fluid bg-white">
+        <div class="col-sm-12 sticky bg-white w-100 px-1">
+            <!--- BODY *** start *** -->
+            <form action="{{ route('save-settings') }}" method="POST" id="settings-form">
+                @csrf
+                <div class="row">
+                    <div class="col-sm-2 p-2" style="background:#FBC6B1;">
+                        <table class="w-100 bg-transparent">
+                            <tr>
+                                <th>OPTION BLOCKS</th>
+                                <td class="w-50">
+                                    <input type="number" class="form border border-dark options" name="options" value="20">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-sm-2 p-2" style="background:#FBC6B1;">
+                        <table class="w-100 bg-transparent">
+                            <tr>
+                                <th>QVPS VALUE</th>
+                                <td class="w-50">
+                                    <input type="text" class="form border border-dark qvps" name="qvps">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-sm-3 p-2" style="background:#9294C2;">
+                        <table class="w-100 bg-transparent">
+                            <tr>
+                                <th class="w-75">VOLUME AVERAGING TIME (seconds)</th>
+                                <td>
+                                    <input type="number" class="form border border-dark volume_averaging_time" name="volume_averaging_time">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-sm-3 p-2" style="background:#9294C2;">
+                        <table class="w-100 bg-transparent">
+                            <tr>
+                                <th class="w-75">LIVE PRICE AVERAGING (seconds)</th>
+                                <td>
+                                    <input type="number" class="form border border-dark live_averaging_time" name="live_averaging_time">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-sm-2 p-0">
+                        <button type="submit" class="btn btn-success h-100 text-sm w-100 rounded-0" id="save-settings">SAVE SETTINGS</button>
+                    </div>
+                </div>
+            </form>
+            <form action="{{ route('calculate') }}" method="POST" id="form2" class="m-0">
+                @csrf
+                <div class="row alert alert-success py-1">
+                    <div class="col-sm-1 px-2">
+                        <select type="text" class="form symbol border border-dark h-25" name="symbol" id="symbol-filter">
+                            <option value="USDT" selected>USDT</option>
+                            <option value="BTC">BTC</option>
+                            <option value="SOL">SOL</option>
+                            <option value="BNB">BNB</option>
+                            <option value="TUSD">TUSD</option>
+                            <option value="ALL">ALL</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-1 p-0">
+                        <select type="text" class="form price_type border border-dark h-25" name="price_type" id="price_type">
+                            <option value="all">ALL</option>
+                            <option value="above" selected>ABOVE</option>
+                            <option value="below">BELOW</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-1 p-0">
+                        <input type="text" class="form price_filter border border-dark h-25" name="price_filter" id="price_filter" placeholder="PRICE FILTER">
+                    </div>
+                    <div class="col-sm-1 p-0 px-2 d-none">
+                        <input type="text" class="form text-sm symbol border border-dark" id="symbol" readonly>
+                        <input type="text" class="form text-sm symbol border border-dark" id="status" readonly>
+                        <input type="text" class="form text-sm symbol border border-dark" id="collection_status">
+                    </div>
+                    <div class="col-sm-2 p-0">
+                        <button type="submit" class="btn btn-primary p-0 py-1 text-sm w-100 h-25" id="search" disabled>SEARCH</button>
+                    </div>
+                    <div class="col-sm-2 p-0">
+                        <button type="button" class="btn btn-success p-0 py-1 text-sm w-100 h-25" id="sort">SORT </button>
+                    </div>
+                    <div class="col-sm-1 p-0 d-none">
+                        <button type="button" class="btn btn-success p-0 py-1 text-sm w-100 d-none" id="start">START <span id="elapsed"></span></button>
+                    </div>
+                    <div class="col-sm-1 p-0 d-none">
+                        <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="start-initial">INITIAL</button>
+                        <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="stop-initial">STOP INITIAL</button>
+                        <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="start-final">FINAL</button>
+                        <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="stop-final">STOP INITIAL</button>
+                        <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="restart">RESTART</button>
+                        <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="start-blocks">START BLOCKS</button>
+                    </div>
+                    <div class="col-sm-1 p-0 d-none">
+                        <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="reset">RESET</button>
+                    </div>
+                    <div class="col-sm-1 p-0 d-none">
+                        <button type="button" class="btn btn-danger p-0 py-1 text-sm w-100 d-none" id="stop">STOP</button>
+                    </div>
+                    <div class="col-sm-2 custom d-none">
+                        <select class="custom-symbols h-25 w-100" name="custom-symbol" id="custom-symbol">
+                            @foreach($symbols as $symbol)
+                                <option value="{{ $symbol['symbol'] }}">{{ $symbol['symbol'] }}</option>
+                            @endforeach
+                        </select>
+                        
+                        <button type="button" class="btn btn-success add-custom-symbol p-0 px-2">+</button>
+                    </div>
+                    <div class="col-sm-3 border border-secondary elapsed d-none rounded-1">
+                        <center>
+                        Time Elapsed <span class="badge badge-success bg-success" id="elapsed"></span>
+                        </center>
+                    </div>
+                </div>
+            </form>
+            <div class="row d-none m-0">
+                <div class="col-sm-12">
+                    <center>
+                    <input type="radio" name="percentage_type" class="percentage_type" value="live" checked> Live Percentage Change &nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="percentage_type" class="percentage_type" value="calculated"> Calculated Percentage Increase
+                    </center>
+                </div>
             </div>
-            <div class="col-sm-4 p-2" style="background:#FBC6B1;">
-                <table class="w-100 bg-transparent">
-                    <tr>
-                        <th>QVPS Value</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="text" class="form border border-dark qvps" name="qvps">
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col-sm-2 p-2" style="background:#9294C2;">
-                <table class="w-100 bg-transparent">
-                    <tr>
-                        <th colspan="6">VOLUME AVERAGING TIME (seconds)</th>
-                    </tr>
-                    <tr>
-                        <td class="w-50">
-                            <input type="number" class="form border border-dark volume_averaging_time" name="volume_averaging_time">
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <!-- <div class="col-sm-6 p-2 d-none" style="background:#FBC6B1;">
-                <table class="w-100 bg-transparent">
-                    <tr>
-                        <th>&nbsp;</th>
-                    </tr>
-                    <tr>
-                        <td class="text-center">
-                            <input type="radio" class="choice" name="choice" value="negative"> <b>ALL NEGATIVE</b>
-                            &nbsp;&nbsp;&nbsp;
-                            <input type="radio" class="choice" name="choice" value="positive"> <b>ALL POSITIVE</b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            
-                        </td>
-                    </tr>
-                </table>
-            </div> -->
-            <div class="col-sm-2 p-2" style="background:#9294C2;">
-                <table class="w-100 bg-transparent">
-                    <tr>
-                        <th colspan="6">LIVE PRICE AVERAGING (seconds)</th>
-                    </tr>
-                    <tr>
-                        <td class="w-50">
-                            <input type="number" class="form border border-dark live_averaging_time" name="live_averaging_time">
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col-sm-2 p-0">
-                <button type="submit" class="btn btn-success h-100 text-sm w-100 rounded-0" id="save-settings">SAVE SETTINGS</button>
-            </div>
-        </div>
-        </form>
-        <form action="{{ route('calculate') }}" method="POST" id="form2">
-        @csrf
-        <div class="row mt-2">
-            <div class="col-sm-2 px-2">
-                <select type="text" class="form symbol border border-dark" name="symbol" id="symbol-filter">
-                    <option value="USDT" selected>USDT</option>
-                    <option value="BTC">BTC</option>
-                    <option value="SOL">SOL</option>
-                    <option value="BNB">BNB</option>
-                    <option value="TUSD">TUSD</option>
-                    <option value="ALL">ALL</option>
-                </select>
-            </div>
-            <div class="col-sm-1 p-0">
-                <select type="text" class="form price_type border border-dark" name="price_type" id="price_type">
-                    <option value="all">ALL</option>
-                    <option value="above" selected>ABOVE</option>
-                    <option value="below">BELOW</option>
-                </select>
-            </div>
-            <div class="col-sm-2 p-0">
-                <input type="text" class="form price_filter border border-dark" name="price_filter" id="price_filter" placeholder="PRICE FILTER">
-            </div>
-            <div class="col-sm-1 p-0 px-2 d-none">
-                <input type="text" class="form text-sm symbol border border-dark" id="symbol" readonly>
-                <input type="text" class="form text-sm symbol border border-dark" id="status" readonly>
-                <input type="text" class="form text-sm symbol border border-dark" id="collection_status">
-            </div>
-            <div class="col-sm-2 p-0">
-                <button type="submit" class="btn btn-primary p-0 py-1 text-sm w-100" id="search" disabled>SEARCH</button>
-            </div>
-            <div class="col-sm-2 p-0">
-                <button type="button" class="btn btn-success p-0 py-1 text-sm w-100" id="sort">SORT </button>
-            </div>
-            <div class="col-sm-1 p-0 d-none">
-                <button type="button" class="btn btn-success p-0 py-1 text-sm w-100 d-none" id="start">START <span id="elapsed"></span></button>
-            </div>
-            <div class="col-sm-1 p-0 d-none">
-                <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="start-initial">INITIAL</button>
-                <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="stop-initial">STOP INITIAL</button>
-                <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="start-final">FINAL</button>
-                <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="stop-final">STOP INITIAL</button>
-                <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="restart">RESTART</button>
-                <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="start-blocks">START BLOCKS</button>
-            </div>
-            <div class="col-sm-1 p-0 d-none">
-                <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="reset">RESET</button>
-            </div>
-            <div class="col-sm-1 p-0 d-none">
-                <button type="button" class="btn btn-danger p-0 py-1 text-sm w-100 d-none" id="stop">STOP</button>
-            </div>
-            <div class="col-sm-3 border border-dark elapsed d-none">
-                <center>
-                Time Elapsed <span class="badge badge-success bg-success" id="elapsed"></span>
-                </center>
-            </div>
-        </div>
-        </form>
-        <div class="row mt-2 d-none">
-            <div class="col-sm-12">
-                <center>
-                <input type="radio" name="percentage_type" class="percentage_type" value="live" checked> Live Percentage Change &nbsp;&nbsp;&nbsp;
-                <input type="radio" name="percentage_type" class="percentage_type" value="calculated"> Calculated Percentage Increase
-                </center>
+            <div class="row h5">
+                <div class="col-sm-12 alert alert-info p-0 m-0">
+                    <input type="hidden" id="choice" class="border border-0" readonly>
+                        &bull; <span id="btc-label"></span><span id="btc"></span> 
+                        &bull; <span id="eth-label"></span><span id="eth"></span> 
+                        &bull; <span id="sol-label"></span><span id="sol"></span>
+                        <span id="custom-symbols"></span>
+                </div>
             </div>
         </div>
-        <div class="row mt-2">
-            <div class="col-sm-12 custom d-none">
-                <select class="custom-symbols" style="width:300px !important;" name="custom-symbol" id="custom-symbol">
-                    @foreach($symbols as $symbol)
-                        <option value="{{ $symbol['symbol'] }}">{{ $symbol['symbol'] }}</option>
-                    @endforeach
-                </select>
-                
-                <button type="button" class="btn btn-success add-custom-symbol">+</button>
-            </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div id="list-container"></div>  
         </div>
-        <div class="row mt-2 h5">
-            <div class="col-sm-12">
-                <input type="hidden" id="choice" class="border border-0" readonly>
-                <p>
-                    &bull; <span id="btc-label"></span><span id="btc"></span> 
-                    &bull; <span id="eth-label"></span><span id="eth"></span> 
-                    &bull; <span id="sol-label"></span><span id="sol"></span>
-                    <span id="custom-symbols"></span>
-                </p>
-            </div>
-        </div>
-        <div id="list-container">
-        </div>
+    </div>
     <!--- BODY *** end *** -->
     </div>
 </div>
@@ -794,6 +767,13 @@ function collectVolume(symbol, value)
         $(document).on('click','#sort', function(){
             $('.sort').trigger('click');
             addRanking();
+        });
+        var sticky = $('.sticky').offset().top;   
+        $(window).scroll(function(){
+            if($(window).scrollTop() > sticky)
+                $('.sticky').css({'position':'fixed','top':'0px'});
+            else
+                $('.sticky').css({'position':'relative'});
         });
     });
 </script>

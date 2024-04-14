@@ -1,4 +1,5 @@
 
+<div class="col-sm-12">
 <input type="hidden" id="block-count" value="{{ $options ?? 10 }}" readonly>
 <div class="alert alert-success qualifying_status p-0 p-1 text-center" style="font-style:italic;font-weight:bold;"></div>
 <table class="bg-transparent tokens-table d-none" id="table">
@@ -62,3 +63,4 @@
         @endforeach
     </tbody>
 </table>
+</div>

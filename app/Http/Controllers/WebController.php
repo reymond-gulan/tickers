@@ -29,6 +29,21 @@ class WebController extends Controller
         return view('index3', compact('setting', 'symbols'));
     }
 
+    public function batch(Request $request)
+    {
+        $data = $request->all();
+        $user_id = $this->userId;
+        $setting = Setting::where('user_id', $user_id)->first();
+        $symbols = Symbol::all();
+
+        if (!empty($setting)) {
+            $setting = $setting->toArray();
+            $setting = json_decode($setting['setting'], true);
+        }
+
+        return view('index', compact('setting', 'symbols'));
+    }
+
     public function collect(Request $request)
     {
         return view('collect');

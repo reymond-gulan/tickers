@@ -16,6 +16,7 @@ use App\Http\Controllers;
 */
 
 Route::get('/', [Controllers\WebController::class, 'index']);
+Route::get('/batch', [Controllers\WebController::class, 'index']);
 Route::get('/collect', [Controllers\WebController::class, 'collect']);
 Route::post('/save-settings', [Controllers\WebController::class, 'saveSettings'])->name('save-settings');
 Route::match(['get', 'post'],'/calculate', [Controllers\WebController::class, 'calculate'])->name('calculate');
