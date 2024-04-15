@@ -808,10 +808,14 @@ function collectVolume(symbol, value)
         });
         var sticky = $('.sticky').offset().top;   
         $(window).scroll(function(){
-            if($(window).scrollTop() > sticky)
+            if($(window).scrollTop() > sticky) {
                 $('.sticky').css({'position':'fixed','top':'0px'});
-            else
+                $('.sticky').removeClass('mt-4');
+            } else {
+                $('.sticky').addClass('mt-4');
                 $('.sticky').css({'position':'relative'});
+            }
+                
         });
     });
 </script>
