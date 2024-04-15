@@ -50,8 +50,12 @@
             $(document).on("click", "table thead tr th:not(.no-sort)", function() {
                 var table = $(this).parents("table");
                 var rows = $(this).parents("table").find("tbody tr").toArray().sort(TableComparer($(this).index()));
-                // var dir = ($(this).hasClass("sort-asc")) ? "desc" : "asc";
-                var dir = $('.sort').data('sort');
+                
+                if ($(this).hasClass('sort-by-rank')) {
+                    var dir = $('.sort').data('sort');
+                } else {
+                    var dir = ($(this).hasClass("sort-asc")) ? "desc" : "asc";
+                }
 
                 if (dir == "desc") {
                     rows = rows.reverse();
@@ -101,10 +105,20 @@
     .h-25{
         height:25px !important;
     }
+    .toggle-settings{
+        position:fixed;
+        right:0;
+        top:0;
+        z-index:1000 !important;
+        padding:0;
+    }
 </style>
 <body>
+<button type="button" class="btn btn-secondary toggle-settings px-3" id="toggle-settings">
+    ...
+</button>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm p-1 text-sm">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm text-sm p-0 d-none">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{-- config('app.name', 'Laravel') --}}
@@ -139,9 +153,6 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" target="_blank" href="/batch">Batch</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="toggle-settings" href="#">Settings</a>
                             </li>
                         @else
                             <li class="nav-item dropdown">

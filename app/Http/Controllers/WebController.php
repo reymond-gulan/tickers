@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\MarketTicker;
 use App\Models\Symbol;
 use App\Models\Setting;
+use App\Models\CustomToken;
 
 class WebController extends Controller
 {
@@ -21,12 +22,14 @@ class WebController extends Controller
         $setting = Setting::where('user_id', $user_id)->first();
         $symbols = Symbol::all();
 
+        $customTokens = CustomToken::where('user_id', $user_id)->get();
+
         if (!empty($setting)) {
             $setting = $setting->toArray();
             $setting = json_decode($setting['setting'], true);
         }
 
-        return view('index3', compact('setting', 'symbols'));
+        return view('index3', compact('setting', 'symbols', 'customTokens'));
     }
 
     public function batch(Request $request)
@@ -401,5 +404,43 @@ class WebController extends Controller
                                 ->avg($column);
 
         return response()->json([ 'value' => $ticker]);
+    }
+
+    public function customTokenSave(Request $request)
+    {
+        $data = $request->all();
+        $user_id = $this->userId;
+        $symbol = $data['symbol'] ?? '';
+
+        if (!empty($symbol)) {
+            CustomToken::updateOrCreate(
+                [
+                    'symbol' => $symbol,
+                    'user_id' => $user_id
+                ],
+                [
+                    'symbol' => $symbol
+                ]
+            );
+
+            return true;
+        }
+        return false;
+    }
+
+    public function customTokenRemove(Request $request)
+    {
+        $data = $request->all();
+        $user_id = $this->userId;
+        $symbol = $data['symbol'] ?? '';
+
+        if (!empty($symbol)) {
+            CustomToken::where('symbol', $symbol)
+                        ->where('user_id', $user_id)
+                        ->delete();
+
+            return true;
+        }
+        return false;
     }
 }

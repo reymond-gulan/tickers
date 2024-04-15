@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="container-fluid bg-white">
-        <div class="col-sm-12 sticky bg-white w-100 px-1">
+        <div class="col-sm-12 sticky bg-white p-0 mt-4">
             <!--- BODY *** start *** -->
             <form action="{{ route('save-settings') }}" method="POST" id="settings-form">
                 @csrf
@@ -9,7 +9,7 @@
                     <div class="col-sm-2 p-2" style="background:#FBC6B1;">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <th>OPTION BLOCKS</th>
+                                <th class="p-0 text-right">OPTION BLOCKS&nbsp;</th>
                                 <td class="w-50">
                                     <input type="number" class="form border border-dark options" name="options" value="20">
                                 </td>
@@ -19,28 +19,28 @@
                     <div class="col-sm-2 p-2" style="background:#FBC6B1;">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <th>QVPS VALUE</th>
+                                <th class="p-0 text-right">QVPS VALUE&nbsp;</th>
                                 <td class="w-50">
                                     <input type="text" class="form border border-dark qvps" name="qvps">
                                 </td>
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-3 p-2" style="background:#9294C2;">
+                    <div class="col-sm-3 py-2" style="background:#9294C2;">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <th class="w-75">VOLUME AVERAGING TIME (seconds)</th>
-                                <td>
+                                <th class="w-75 p-0">VOLUME AVERAGING TIME (seconds)</th>
+                                <td class="p-0">
                                     <input type="number" class="form border border-dark volume_averaging_time" name="volume_averaging_time">
                                 </td>
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-3 p-2" style="background:#9294C2;">
+                    <div class="col-sm-3 py-2" style="background:#9294C2;">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <th class="w-75">LIVE PRICE AVERAGING (seconds)</th>
-                                <td>
+                                <th class="w-75 p-0">LIVE PRICE AVERAGING (seconds)</th>
+                                <td class="p-0">
                                     <input type="number" class="form border border-dark live_averaging_time" name="live_averaging_time">
                                 </td>
                             </tr>
@@ -51,71 +51,71 @@
                     </div>
                 </div>
             </form>
-            <form action="{{ route('calculate') }}" method="POST" id="form2" class="m-0">
+            <form action="{{ route('calculate') }}" method="POST" id="form2">
                 @csrf
-                <div class="row alert alert-success py-1">
-                    <div class="col-sm-1 px-2">
-                        <select type="text" class="form symbol border border-dark h-25" name="symbol" id="symbol-filter">
-                            <option value="USDT" selected>USDT</option>
-                            <option value="BTC">BTC</option>
-                            <option value="SOL">SOL</option>
-                            <option value="BNB">BNB</option>
-                            <option value="TUSD">TUSD</option>
-                            <option value="ALL">ALL</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-1 p-0">
-                        <select type="text" class="form price_type border border-dark h-25" name="price_type" id="price_type">
-                            <option value="all">ALL</option>
-                            <option value="above" selected>ABOVE</option>
-                            <option value="below">BELOW</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-1 p-0">
-                        <input type="text" class="form price_filter border border-dark h-25" name="price_filter" id="price_filter" placeholder="PRICE FILTER">
-                    </div>
-                    <div class="col-sm-1 p-0 px-2 d-none">
-                        <input type="text" class="form text-sm symbol border border-dark" id="symbol" readonly>
-                        <input type="text" class="form text-sm symbol border border-dark" id="status" readonly>
-                        <input type="text" class="form text-sm symbol border border-dark" id="collection_status">
-                    </div>
-                    <div class="col-sm-2 p-0">
-                        <button type="submit" class="btn btn-primary p-0 py-1 text-sm w-100 h-25" id="search" disabled>SEARCH</button>
-                    </div>
-                    <div class="col-sm-2 p-0">
-                        <button type="button" class="btn btn-success p-0 py-1 text-sm w-100 h-25" id="sort">SORT </button>
-                    </div>
-                    <div class="col-sm-1 p-0 d-none">
-                        <button type="button" class="btn btn-success p-0 py-1 text-sm w-100 d-none" id="start">START <span id="elapsed"></span></button>
-                    </div>
-                    <div class="col-sm-1 p-0 d-none">
-                        <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="start-initial">INITIAL</button>
-                        <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="stop-initial">STOP INITIAL</button>
-                        <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="start-final">FINAL</button>
-                        <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="stop-final">STOP INITIAL</button>
-                        <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="restart">RESTART</button>
-                        <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="start-blocks">START BLOCKS</button>
-                    </div>
-                    <div class="col-sm-1 p-0 d-none">
-                        <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="reset">RESET</button>
-                    </div>
-                    <div class="col-sm-1 p-0 d-none">
-                        <button type="button" class="btn btn-danger p-0 py-1 text-sm w-100 d-none" id="stop">STOP</button>
-                    </div>
-                    <div class="col-sm-2 custom d-none">
-                        <select class="custom-symbols h-25 w-100" name="custom-symbol" id="custom-symbol">
-                            @foreach($symbols as $symbol)
-                                <option value="{{ $symbol['symbol'] }}">{{ $symbol['symbol'] }}</option>
-                            @endforeach
-                        </select>
-                        
-                        <button type="button" class="btn btn-success add-custom-symbol p-0 px-2">+</button>
-                    </div>
-                    <div class="col-sm-3 border border-secondary elapsed d-none rounded-1">
-                        <center>
-                        Time Elapsed <span class="badge badge-success bg-success" id="elapsed"></span>
-                        </center>
-                    </div>
+                <div class="row p-1 alert alert-success my-0">
+                        <div class="col-sm-1 p-0">
+                            <select type="text" class="form symbol border border-dark h-25" name="symbol" id="symbol-filter">
+                                <option value="USDT" selected>USDT</option>
+                                <option value="BTC">BTC</option>
+                                <option value="SOL">SOL</option>
+                                <option value="BNB">BNB</option>
+                                <option value="TUSD">TUSD</option>
+                                <option value="ALL">ALL</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-1 p-0">
+                            <select type="text" class="form price_type border border-dark h-25" name="price_type" id="price_type">
+                                <option value="all">ALL</option>
+                                <option value="above" selected>ABOVE</option>
+                                <option value="below">BELOW</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-1 p-0">
+                            <input type="text" class="form price_filter border border-dark h-25" name="price_filter" id="price_filter" placeholder="PRICE FILTER">
+                        </div>
+                        <div class="col-sm-1 p-0 px-2 d-none">
+                            <input type="text" class="form text-sm symbol border border-dark" id="symbol" readonly>
+                            <input type="text" class="form text-sm symbol border border-dark" id="status" readonly>
+                            <input type="text" class="form text-sm symbol border border-dark" id="collection_status">
+                        </div>
+                        <div class="col-sm-2 p-0">
+                            <button type="submit" class="btn btn-primary p-0 py-1 text-sm w-100 h-25" id="search" disabled>SEARCH</button>
+                        </div>
+                        <div class="col-sm-2 p-0">
+                            <button type="button" class="btn btn-success p-0 py-1 text-sm w-100 h-25" id="sort">SORT BY RANK</button>
+                        </div>
+                        <div class="col-sm-1 p-0 d-none">
+                            <button type="button" class="btn btn-success p-0 py-1 text-sm w-100 d-none" id="start">START <span id="elapsed"></span></button>
+                        </div>
+                        <div class="col-sm-1 p-0 d-none">
+                            <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="start-initial">INITIAL</button>
+                            <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="stop-initial">STOP INITIAL</button>
+                            <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="start-final">FINAL</button>
+                            <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="stop-final">STOP INITIAL</button>
+                            <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="restart">RESTART</button>
+                            <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="start-blocks">START BLOCKS</button>
+                        </div>
+                        <div class="col-sm-1 p-0 d-none">
+                            <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="reset">RESET</button>
+                        </div>
+                        <div class="col-sm-1 p-0 d-none">
+                            <button type="button" class="btn btn-danger p-0 py-1 text-sm w-100 d-none" id="stop">STOP</button>
+                        </div>
+                        <div class="col-sm-2 custom d-none">
+                            <select class="custom-symbols h-25 w-100" name="custom-symbol" id="custom-symbol">
+                                @foreach($symbols as $symbol)
+                                    <option value="{{ $symbol['symbol'] }}">{{ $symbol['symbol'] }}</option>
+                                @endforeach
+                            </select>
+                            
+                            <button type="button" class="btn btn-success add-custom-symbol p-0 px-2">+</button>
+                        </div>
+                        <div class="col-sm-3 border border-secondary elapsed d-none rounded-1">
+                            <center>
+                            Time Elapsed <span class="badge badge-success bg-success" id="elapsed"></span>
+                            </center>
+                        </div>
                 </div>
             </form>
             <div class="row d-none m-0">
@@ -126,19 +126,27 @@
                     </center>
                 </div>
             </div>
-            <div class="row h5">
-                <div class="col-sm-12 alert alert-info p-0 m-0">
-                    <input type="hidden" id="choice" class="border border-0" readonly>
-                        &bull; <span id="btc-label"></span><span id="btc"></span> 
-                        &bull; <span id="eth-label"></span><span id="eth"></span> 
-                        &bull; <span id="sol-label"></span><span id="sol"></span>
-                        <span id="custom-symbols"></span>
-                </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 p-0 my-1 custom-tokens d-none alert alert-info">
+                <input type="hidden" id="choice" class="border border-0" readonly>
+                    &bull; <span id="btc-label"></span><span id="btc"></span> 
+                    &bull; <span id="eth-label"></span><span id="eth"></span> 
+                    &bull; <span id="sol-label"></span><span id="sol"></span>
+                    <span id="custom-symbols">
+                        @if (count($customTokens) > 0)
+                            @foreach($customTokens as $custom)
+                                <span class="remove-custom" style="cursor:pointer;" data-symbol="{{ $custom['symbol'] }}" id="custom{{ $custom['symbol'] }}">&bull; <span id="custom-symbol-{{ $custom['symbol'] }}">{{ $custom['symbol'] }} $</span><span id="custom-{{ $custom['symbol'] }}"></span></span>
+                            @endforeach
+                        @endif
+                    </span>
             </div>
         </div>
+
     <div class="row">
-        <div class="col-sm-12">
-            <div id="list-container"></div>  
+        <div class="col-sm-12 p-0">
+            <p class="bg-secondary mb-1 text-center text-white text-sm"><i class="feed-status"></i></p>
+            <div id="list-container"></div>
         </div>
     </div>
     <!--- BODY *** end *** -->
@@ -282,7 +290,7 @@ function getAverage(symbol, initial, target)
     //     $('#table thead').removeClass('text-success').addClass('text-danger');
     // }
 
-    for(i = 1; i <= blocks;)
+    for(i = 1; i <= blocks;i++)
     {
         if ($('#symbol-'+symbol+'-option'+i).html() == "") {
             
@@ -326,7 +334,6 @@ function getAverage(symbol, initial, target)
             optionAverage.html(increase);
             break;
         }
-        i++;
     }
 
     if ($('#symbol-'+symbol+'-live-price').val() !== "") {
@@ -391,25 +398,19 @@ function collectVolume(symbol, value)
     $(function(){
 
         var interval, startTime, averaging, initialAveraging, finalAveraging;
-
-        $('.navbar .container').addClass('d-none');
-
-        $(document).on('mouseenter', '.navbar', function(){
-            $('.navbar .container').removeClass('d-none');
-        });
-        $(document).on('mouseleave', '.navbar', function(){
-            $('.navbar .container').addClass('d-none');
-        });
-
-
         const url = "wss://stream.binance.com:9443/ws/";
         const ticker = "!ticker_1h@arr";
         const socket = new WebSocket(url + ticker);
+
+        socket.addEventListener("error", (event) => {
+            $('.feed-status').html("Connection cannot be established...");
+        });
 
         socket.onmessage = function (event) {
             var data = JSON.parse(event.data);
             var status = $('#status').val();
             if (status == 'start') {
+                $('.custom-tokens').removeClass('d-none');
                 $.each(data, function(i, e){
                     var collection_status = $('#collection_status').val();
                     var custom = $('#custom-'+e.s);
@@ -471,52 +472,59 @@ function collectVolume(symbol, value)
                         collectValues(e.s, parseFloat(e.c));
                     }
                 });
+
+                $('.feed-status').html('receiving token feeds ('+data.length+'/s)...');
             }
         };
 
         $(document).on('submit', '#form2', function(e){
             e.preventDefault();
-            $('#search').html('Processing...');
-            $('#search').attr('disabled', true);
-            $('#collection_status').val('volume');
-            $('.elapsed').addClass('d-none');
-            $('.tokens-table').addClass('d-none');
 
-            clearInterval(interval);
-            clearInterval(averaging);
+            if (confirm("Start new search?")) {
+                $('#search').html('Processing...');
+                $('#search').attr('disabled', true);
+                $('#collection_status').val('volume');
+                $('.elapsed').addClass('d-none');
+                $('.tokens-table').addClass('d-none');
 
-            var symbol = $('#symbol-filter').val();
-            $('#symbol').val(symbol);
+                clearInterval(interval);
+                clearInterval(averaging);
 
-            var choice = $('.choice:checked').val();
-            $('#choice').val(choice);
+                var symbol = $('#symbol-filter').val();
+                $('#symbol').val(symbol);
 
-            $.ajax({
-                url:'{{route("coins-list")}}',
-                method:'GET',
-                data:{
-                    symbol:symbol
-                },
-                success:function(response){
-                    $('#list-container').html(response);
-                    $('#search').html('SEARCH');
-                    $('#search').attr('disabled', false);
-                    $('#start').removeClass('d-none');
-                    $('#stop').removeClass('d-none');
-                    $('#start-initial').trigger('click');
-                    $('#collection_status').val('volume');
-                    $('.custom').removeClass('d-none');
-                }, error:function(response){
-                    alert("An error occurred. Re-submit request.");
-                    $('#search').html('SEARCH');
-                    $('#search').attr('disabled', false);
-                }
-            });
+                var choice = $('.choice:checked').val();
+                $('#choice').val(choice);
+
+                $.ajax({
+                    url:'{{route("coins-list")}}',
+                    method:'GET',
+                    data:{
+                        symbol:symbol
+                    },
+                    success:function(response){
+                        $('#list-container').html(response);
+                        $('#search').html('SEARCH');
+                        $('#search').attr('disabled', false);
+                        $('#start').removeClass('d-none');
+                        $('#stop').removeClass('d-none');
+                        $('#start-initial').trigger('click');
+                        $('#collection_status').val('volume');
+                        $('.custom').removeClass('d-none');
+                    }, error:function(response){
+                        alert("An error occurred. Re-submit request.");
+                        $('#search').html('SEARCH');
+                        $('#search').attr('disabled', false);
+                    }
+                });
+            }
+            
         });
 
         $(document).on('click', '#toggle-settings', function(){
             var panel = $('#settings-form');
             var panel2 = $('#form2');
+            var nav = $('.navbar .container');
 
             if (panel.hasClass('d-none')) {
                 panel.removeClass('d-none');
@@ -528,6 +536,12 @@ function collectVolume(symbol, value)
                 panel2.removeClass('d-none');
             } else {
                 panel2.addClass('d-none');
+            }
+
+            if (nav.hasClass('d-none')) {
+                nav.removeClass('d-none');
+            } else {
+                nav.addClass('d-none');
             }
         });
 
@@ -587,6 +601,7 @@ function collectVolume(symbol, value)
                 var elapsed = minutes +':'+ seconds;
                 $('#elapsed').html(elapsed);
             }, 1000);
+            $('.sort-qvps').trigger('click');
         });
 
         $(document).on('click', '#start-blocks', function(){
@@ -613,10 +628,7 @@ function collectVolume(symbol, value)
                         }
                         getAverage(symbol, initial);
                     });
-
-                    // $('.sort').trigger('click');
                     priceFilter();
-                    // addRanking();
                 }, duration);
             }
         });
@@ -753,15 +765,41 @@ function collectVolume(symbol, value)
             var html = "";
             var custom = $('#custom-symbol-'+symbol).html();
 
-            if (custom === undefined) {
-                html += ' <span class="remove-custom" style="cursor:pointer;" data-symbol="'+symbol+'" id="custom'+symbol+'">&bull; <span id="custom-symbol-'+symbol+'">'+symbol+' $</span><span id="custom-'+symbol+'"></span></span>';
-                $('#custom-symbols').append(html);
-            }
+            $.ajax({
+                url:"{{ route('custom-token-save') }}",
+                method:'POST',
+                data:{
+                    symbol:symbol
+                },
+                dataType:'json',
+                success:function(response){
+                    if (response) {
+                        if (custom === undefined) {
+                            html += ' <span class="remove-custom" style="cursor:pointer;" data-symbol="'+symbol+'" id="custom'+symbol+'">&bull; <span id="custom-symbol-'+symbol+'">'+symbol+' $</span><span id="custom-'+symbol+'"></span></span>';
+                            $('#custom-symbols').append(html);
+                        }
+                    }
+                }
+            });
+
         });
 
         $(document).on('click','.remove-custom', function(){
             var symbol = $(this).data('symbol');
-            $('#custom'+symbol).remove();
+
+            $.ajax({
+                url:"{{ route('custom-token-remove') }}",
+                method:'POST',
+                data:{
+                    symbol:symbol
+                },
+                dataType:'json',
+                success:function(response){
+                    if (response) {
+                        $('#custom'+symbol).remove();
+                    }
+                }
+            });
         });
 
         $(document).on('click','#sort', function(){

@@ -22,6 +22,8 @@ Route::post('/save-settings', [Controllers\WebController::class, 'saveSettings']
 Route::match(['get', 'post'],'/calculate', [Controllers\WebController::class, 'calculate'])->name('calculate');
 Route::get('/coins/list', [Controllers\WebController::class, 'list'])->name('coins-list');
 Route::post('/market-ticker', [Controllers\WebController::class, 'marketTicker'])->name('market-ticker');
+Route::post('/custom-token/save', [Controllers\WebController::class, 'customTokenSave'])->name('custom-token-save');
+Route::post('/custom-token/remove', [Controllers\WebController::class, 'customTokenRemove'])->name('custom-token-remove');
 
 Route::get('/symbols', [Controllers\WebController::class, 'symbols'])->name('get-symbols');
 
