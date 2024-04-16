@@ -7,7 +7,7 @@
                 @csrf
                 <div class="row">
                     <div class="col-sm-2 p-2" style="background:#FBC6B1;">
-                        <table class="w-100 bg-transparent">
+                        <table class="w-100 bg-transparent d-none">
                             <tr>
                                 <th class="p-0 text-right">OPTION BLOCKS&nbsp;</th>
                                 <td class="w-50">
@@ -127,20 +127,16 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-12 p-0 my-1 custom-tokens d-none alert alert-info">
-                <input type="hidden" id="choice" class="border border-0" readonly>
-                    &bull; <span id="btc-label"></span><span id="btc"></span> 
-                    &bull; <span id="eth-label"></span><span id="eth"></span> 
-                    &bull; <span id="sol-label"></span><span id="sol"></span>
-                    <span id="custom-symbols">
-                        @if (count($customTokens) > 0)
-                            @foreach($customTokens as $custom)
-                                <span class="remove-custom" style="cursor:pointer;" data-symbol="{{ $custom['symbol'] }}" id="custom{{ $custom['symbol'] }}">&bull; <span id="custom-symbol-{{ $custom['symbol'] }}">{{ $custom['symbol'] }} $</span><span id="custom-{{ $custom['symbol'] }}"></span></span>
-                            @endforeach
-                        @endif
-                    </span>
-            </div>
+        <div class="row p-0 my-1 custom-tokens d-none alert alert-info" id="custom-symbols">
+            <input type="hidden" id="choice" class="border border-0" readonly>
+                <div class="col-sm-2">&bull; <span id="btc-label"></span><span id="btc"></span></div>
+                <div class="col-sm-2">&bull; <span id="eth-label"></span><span id="eth"></span></div> 
+                <div class="col-sm-2">&bull; <span id="sol-label"></span><span id="sol"></span></div>
+                @if (count($customTokens) > 0)
+                    @foreach($customTokens as $custom)
+                        <div class="col-sm-2"><span class="remove-custom" style="cursor:pointer;" data-symbol="{{ $custom['symbol'] }}" id="custom{{ $custom['symbol'] }}">&bull; <span id="custom-symbol-{{ $custom['symbol'] }}">{{ $custom['symbol'] }} $</span><span id="custom-{{ $custom['symbol'] }}"></span></span></div>
+                    @endforeach
+                @endif
         </div>
 
     <div class="row">
@@ -275,13 +271,25 @@ function getAverage(symbol, initial, target)
     var increase = percentageIncrease(parseFloat(initial), parseFloat(final));
     var qpps = ((parseFloat(final) / parseFloat(initial)) * 100) / parseInt(liveAveragingTime);
 
+    var i = parseFloat($('#symbol-'+symbol+'-price').html());
+    var j = parseFloat($('#symbol-'+symbol+'-latest').html());
+
+    var change = (j - i);
+    // var change_percentage = (parseFloat(j) / parseFloat(i));
+    var change_percentage = percentageIncrease(i, j);
+    var change_per_second = ((j/i) / parseInt(liveAveragingTime));
+    
+    // var change = (parseFloat(final) - parseFloat(initial));
+    // var change_percentage = (parseFloat(final) / parseFloat(initial));
+    // var change_per_second = (change_percentage / parseInt(liveAveragingTime));
+
     if (isNaN(qpps) || !isFinite(qpps)) {
         qpps = 0;
     }
 
     $('#symbol-'+symbol+'-qpps').html(qpps.toFixed(2));
 
-    var blocks = $('#block-count').val();
+    // var blocks = $('#block-count').val();
     // var choice = $('#choice').val();
     
     // if (choice == 'positive') {
@@ -290,51 +298,76 @@ function getAverage(symbol, initial, target)
     //     $('#table thead').removeClass('text-success').addClass('text-danger');
     // }
 
-    for(i = 1; i <= blocks;i++)
-    {
-        if ($('#symbol-'+symbol+'-option'+i).html() == "") {
+    // for(i = 1; i <= blocks;i++)
+    // {
+    //     if ($('#symbol-'+symbol+'-option'+i).html() == "") {
             
-            var optionAverage = $('#symbol-'+symbol+'-option'+i);
-            var previousBlock = (i - 1);
-            var previous = $('#symbol-'+symbol+'-option'+previousBlock).html();
-            if (i == 1) {
-                optionAverage.removeClass('badge bg-success').removeClass('badge bg-danger');
-            } else {
-                if (parseFloat(increase) == 0) {
-                    optionAverage.removeClass('badge bg-success').removeClass('badge bg-danger');
+    //         var optionAverage = $('#symbol-'+symbol+'-option'+i);
+    //         var previousBlock = (i - 1);
+    //         var previous = $('#symbol-'+symbol+'-option'+previousBlock).html();
+    //         if (i == 1) {
+    //             optionAverage.removeClass('badge bg-success').removeClass('badge bg-danger');
+    //         } else {
+    //             if (parseFloat(increase) == 0) {
+    //                 optionAverage.removeClass('badge bg-success').removeClass('badge bg-danger');
 
-                    // if (choice == 'positive') {
-                    //     $('#symbol-'+symbol).addClass('d-none');
-                    // }
+    //                 // if (choice == 'positive') {
+    //                 //     $('#symbol-'+symbol).addClass('d-none');
+    //                 // }
 
-                } else if (parseFloat(previous) < parseFloat(increase)) {
-                    optionAverage.addClass('badge bg-success').removeClass('bg-danger');
+    //             } else if (parseFloat(previous) < parseFloat(increase)) {
+    //                 optionAverage.addClass('badge bg-success').removeClass('bg-danger');
 
-                    // if (choice == 'negative') {
-                    //     $('#symbol-'+symbol).addClass('d-none');
-                    // }
+    //                 // if (choice == 'negative') {
+    //                 //     $('#symbol-'+symbol).addClass('d-none');
+    //                 // }
 
-                } else if (parseFloat(previous) > parseFloat(increase)) {
-                    optionAverage.removeClass('bg-success').addClass('badge bg-danger');
+    //             } else if (parseFloat(previous) > parseFloat(increase)) {
+    //                 optionAverage.removeClass('bg-success').addClass('badge bg-danger');
                     
-                    if (choice == 'positive') {
-                        $('#symbol-'+symbol).addClass('d-none');
-                    }
+    //                 if (choice == 'positive') {
+    //                     $('#symbol-'+symbol).addClass('d-none');
+    //                 }
 
-                } else {
-                    optionAverage.removeClass('badge bg-success').removeClass('badge bg-danger');
-                }
-            }
+    //             } else {
+    //                 optionAverage.removeClass('badge bg-success').removeClass('badge bg-danger');
+    //             }
+    //         }
 
-            if (isNaN(increase)) {
-                increase = 0;
-            }
+    //         if (isNaN(increase)) {
+    //             increase = 0;
+    //         }
     
-            $('#symbol-'+symbol+'-latest-price').html(increase);
-            optionAverage.html(increase);
-            break;
-        }
+    //         $('#symbol-'+symbol+'-latest-price').html(increase);
+    //         optionAverage.html(increase);
+    //         break;
+    //     }
+    // }
+
+    if (isNaN(increase)) {
+        increase = 0;
     }
+
+    var c = change.toFixed(5);
+    var cp = change_percentage;
+    var cps = change_per_second.toFixed(5);
+
+    if (isNaN(c)) {
+        c = 0;
+    }
+
+    if (isNaN(cp)) {
+        cp = 0;
+    }
+
+    if (isNaN(cps)) {
+        cps = 0;
+    }
+
+    $('#symbol-'+symbol+'-latest-price').html(increase);
+    $('#symbol-'+symbol+'-change').html(c);
+    $('#symbol-'+symbol+'-change-percentage').html(cp);
+    $('#symbol-'+symbol+'-change-per-second').html(cps);
 
     if ($('#symbol-'+symbol+'-live-price').val() !== "") {
         $('#symbol-'+symbol+'-live-price').val("");
@@ -471,6 +504,12 @@ function collectVolume(symbol, value)
                     } else if (collection_status === 'price') {
                         collectValues(e.s, parseFloat(e.c));
                     }
+
+                    $('#symbol-'+e.s+'-latest').html(e.c);
+                    var current = new Date().toLocaleString();
+                    var time = current.substring(10, new String(current).length);
+
+                    $('#symbol-'+e.s+'-current-time').html(time.toLowerCase());
                 });
 
                 $('.feed-status').html('receiving token feeds ('+data.length+'/s)...');
@@ -775,7 +814,7 @@ function collectVolume(symbol, value)
                 success:function(response){
                     if (response) {
                         if (custom === undefined) {
-                            html += ' <span class="remove-custom" style="cursor:pointer;" data-symbol="'+symbol+'" id="custom'+symbol+'">&bull; <span id="custom-symbol-'+symbol+'">'+symbol+' $</span><span id="custom-'+symbol+'"></span></span>';
+                            html += ' <div class="col-sm-2"><span class="remove-custom" style="cursor:pointer;" data-symbol="'+symbol+'" id="custom'+symbol+'">&bull; <span id="custom-symbol-'+symbol+'">'+symbol+' $</span><span id="custom-'+symbol+'"></span></span></div>';
                             $('#custom-symbols').append(html);
                         }
                     }
