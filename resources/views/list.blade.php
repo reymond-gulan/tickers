@@ -59,9 +59,9 @@
                 <td class="text-center" id="symbol-{{ $symbol }}-price"></td>
                 <td class="text-center" id="symbol-{{ $symbol }}-latest"></td>
                 <td class="text-center d-none" id="symbol-{{ $symbol }}-latest-price"></td>
-                <td class="text-center" id="symbol-{{ $symbol }}-change"></td>
-                <td class="text-center" id="symbol-{{ $symbol }}-change-percentage"></td>
-                <td class="text-center" id="symbol-{{ $symbol }}-change-per-second"></td>
+                <td class="text-center h4" id="symbol-{{ $symbol }}-change"></td>
+                <td class="text-center h4" id="symbol-{{ $symbol }}-change-percentage"></td>
+                <td class="text-center h4" id="symbol-{{ $symbol }}-change-per-second"></td>
             </tr>
             {{--@endif--}}
         @endforeach
