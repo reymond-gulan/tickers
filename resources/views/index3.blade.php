@@ -197,7 +197,7 @@ function volumePercentage()
             qvpsValue = 3.99;
         }
 
-        if (parseFloat(qvps) < parseInt(qvpsValue) || parseFloat(qvps) === 0) {
+        if (parseFloat(qvps) < parseFloat(qvpsValue) || parseFloat(qvps) === 0) {
             $('#symbol-'+symbol).addClass('d-none');
         }
 
