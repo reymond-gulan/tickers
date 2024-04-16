@@ -7,8 +7,8 @@
             <th></th>
             <th>SYMBOL</th>
             <th class="d-none"></th>
-            <th class="d-none">IV</th>
-            <th class="d-none">FV</th>
+            <th>PRE-QUALIFYING AVERAGE</th>
+            <th>QUALIFYING AVERAGE</th>
             <th class="sort-qvps sort-by-rank" data-sort="desc">VOLUME CHANGE</th>
             <th class="d-none"></th>
             <th>QUALIFYING TIME</th>
@@ -28,7 +28,6 @@
             @php
                 $symbol = $symbol['symbol'];
             @endphp
-            {{--@if (!empty($result[$symbol]['volume']) && $result[$symbol]['volume'] > $percentage)--}}
             <tr data-symbol="{{ $symbol }}" id="symbol-{{ $symbol }}" class="symbols border-bottom border-secondary">
                 <td id="symbol-{{ $symbol }}-ranking" class="ranking"></td>
                 <td class="text-center">
@@ -45,8 +44,8 @@
                 <td class="d-none">
                     <input class="form-control" id="symbol-{{ $symbol }}-volume" class="volume text-xs border-0">
                 </td>
-                <td class="d-none" id="symbol-{{ $symbol }}-initial-volume-value"><!--- INITIAL VOLUME VALUE --></td>
-                <td class="d-none" id="symbol-{{ $symbol }}-final-volume-value"><!--- FINAL VOLUME VALUE --></td>
+                <td id="symbol-{{ $symbol }}-initial-volume-value"><!--- INITIAL VOLUME VALUE --></td>
+                <td id="symbol-{{ $symbol }}-final-volume-value"><!--- FINAL VOLUME VALUE --></td>
                 <td class="text-center" id="symbol-{{ $symbol }}-volume-average"><!--- VOLUME AVERAGE (QVPS) --></td>
                 <td class="d-none">
                     <input class="form-control" id="symbol-{{ $symbol }}-live-price" class="live-price">
@@ -63,7 +62,6 @@
                 <td class="text-center h4" id="symbol-{{ $symbol }}-change-percentage"></td>
                 <td class="text-center h4" id="symbol-{{ $symbol }}-change-per-second"></td>
             </tr>
-            {{--@endif--}}
         @endforeach
     </tbody>
 </table>
