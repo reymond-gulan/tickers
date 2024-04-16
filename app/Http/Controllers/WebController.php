@@ -76,7 +76,12 @@ class WebController extends Controller
 
         // $percentage = (int)$setting['percent_qualifier'] ?? 0;
         $percentage = 0;
-        $options = (int)$setting['options'] ?? 10; 
+        // $options = (int)$setting['options'] ?? 10; 
+        $options = 0;
+
+        $pre = (int)$setting['pre_qualifying'] ?? 10;
+        $qualifying = (int)$setting['qualifying'] ?? 10;
+        $sub = ($pre + $qualifying);
 
         $startTime = $setting['start_time'] ?? 60;
         $startTimeUnit = $setting['start_time_unit'] ?? 'seconds';
@@ -147,7 +152,7 @@ class WebController extends Controller
 
 
 
-        $html = view('list', compact('tickers', 'result', 'percentage', 'options', 'live', 'sym', 'symbols'))->render();
+        $html = view('list', compact('tickers', 'result', 'percentage', 'options', 'live', 'sym', 'symbols', 'sub'))->render();
         return $html;
     }
 

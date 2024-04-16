@@ -7,11 +7,11 @@
                 @csrf
                 <div class="row">
                     <div class="col-sm-2 p-2" style="background:#FBC6B1;">
-                        <table class="w-100 bg-transparent d-none">
+                        <table class="w-100 bg-transparent">
                             <tr>
-                                <th class="p-0 text-right">OPTION BLOCKS&nbsp;</th>
+                                <th class="p-0 text-right">PRE-QUALIFYING&nbsp;</th>
                                 <td class="w-50">
-                                    <input type="number" class="form border border-dark options" name="options" value="20">
+                                    <input type="number" class="form border border-dark pre_qualifying" name="pre_qualifying">
                                 </td>
                             </tr>
                         </table>
@@ -19,15 +19,25 @@
                     <div class="col-sm-2 p-2" style="background:#FBC6B1;">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <th class="p-0 text-right">QVPS VALUE&nbsp;</th>
+                                <th class="p-0 text-right">QUALIFYING&nbsp;</th>
+                                <td class="w-50">
+                                    <input type="text" class="form border border-dark qualifying" name="qualifying">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-sm-2 p-2" style="background:#FBC6B1;">
+                        <table class="w-100 bg-transparent">
+                            <tr>
+                                <th class="p-0 text-right">MINIMUM&nbsp;QUALIFIER&nbsp;</th>
                                 <td class="w-50">
                                     <input type="text" class="form border border-dark qvps" name="qvps">
                                 </td>
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-3 py-2" style="background:#9294C2;">
-                        <table class="w-100 bg-transparent">
+                    <div class="col-sm-2 py-2" style="background:#9294C2;">
+                        <table class="w-100 bg-transparent d-none">
                             <tr>
                                 <th class="w-75 p-0">VOLUME AVERAGING TIME (seconds)</th>
                                 <td class="p-0">
@@ -36,8 +46,8 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-3 py-2" style="background:#9294C2;">
-                        <table class="w-100 bg-transparent">
+                    <div class="col-sm-2 py-2" style="background:#9294C2;">
+                        <table class="w-100 bg-transparent d-none">
                             <tr>
                                 <th class="w-75 p-0">LIVE PRICE AVERAGING (seconds)</th>
                                 <td class="p-0">
@@ -176,7 +186,8 @@ function volumePercentage()
         var final = $('#symbol-'+symbol+'-final-volume-value').html();
 
         // var qvps = (parseFloat(final) / parseFloat(initial)) / parseInt(averaging_time);
-        var qvps = ((parseFloat(final) / parseFloat(initial)) * 100) / parseInt(averaging_time);
+        // var qvps = ((parseFloat(final) / parseFloat(initial)) * 100) / parseInt(averaging_time);
+        var qvps = (parseFloat(final) / parseFloat(initial));
 
         if (isNaN(qvps) || !isFinite(qvps)) {
             qvps = 0;
@@ -275,9 +286,9 @@ function getAverage(symbol, initial, target)
     var j = parseFloat($('#symbol-'+symbol+'-latest').html());
 
     var change = (j - i);
-    // var change_percentage = (parseFloat(j) / parseFloat(i));
+    var elapsed = $('#symbol-'+symbol+'-elapsed').html();
     var change_percentage = percentageIncrease(i, j);
-    var change_per_second = ((j/i) / parseInt(liveAveragingTime));
+    var change_per_second = (change / parseInt(elapsed));
     
     // var change = (parseFloat(final) - parseFloat(initial));
     // var change_percentage = (parseFloat(final) / parseFloat(initial));
@@ -428,6 +439,20 @@ function collectVolume(symbol, value)
     }
 }
 
+function hhmmss(symbol, totalSeconds)
+{
+    let hours = Math.floor(totalSeconds / 3600);
+    totalSeconds %= 3600;
+    let minutes = Math.floor(totalSeconds / 60);
+    let seconds = totalSeconds % 60;
+
+    minutes = String(minutes).padStart(2, "0");
+    hours = String(hours).padStart(2, "0");
+    seconds = String(seconds).padStart(2, "0");
+    
+    $('#symbol-'+symbol+'-elapsed-time').html(hours + ":" + minutes + ":" + seconds);
+}
+
     $(function(){
 
         var interval, startTime, averaging, initialAveraging, finalAveraging;
@@ -507,9 +532,16 @@ function collectVolume(symbol, value)
 
                     $('#symbol-'+e.s+'-latest').html(e.c);
                     var current = new Date().toLocaleString();
-                    var time = current.substring(10, new String(current).length);
-
+                    var time = current.substring(10, (new String(current).length));
                     $('#symbol-'+e.s+'-current-time').html(time.toLowerCase());
+
+                    var start_time = $('#symbol-'+e.s+'-time').html();
+                    var end_time = $.now();
+                    var diff =  (parseInt(end_time / 1000) - start_time);
+                    if (diff !== undefined && diff > 0) {
+                        $('#symbol-'+e.s+'-elapsed').html(diff);
+                        hhmmss(e.s, diff);
+                    }
                 });
 
                 $('.feed-status').html('receiving token feeds ('+data.length+'/s)...');
@@ -668,7 +700,7 @@ function collectVolume(symbol, value)
                         getAverage(symbol, initial);
                     });
                     priceFilter();
-                }, duration);
+                }, 1000);
             }
         });
 
@@ -676,7 +708,8 @@ function collectVolume(symbol, value)
             $('.qualifying_status').append("Initial volume collection initialized... ");
             $('#status').val('start');
             var symbols = $('.symbols');
-            var averaging_time = $('.volume_averaging_time').val();
+            // var averaging_time = $('.volume_averaging_time').val();
+            var averaging_time = $('.pre_qualifying').val();
             var duration;
 
             if (averaging_time == "") {
@@ -711,7 +744,8 @@ function collectVolume(symbol, value)
             $('.qualifying_status').append("Final volume collection initialized... ");
             $('#status').val('start');
             var symbols = $('.symbols');
-            var averaging_time = $('.volume_averaging_time').val();
+            // var averaging_time = $('.volume_averaging_time').val();
+            var averaging_time = $('.qualifying').val();
             var duration;
 
             if (averaging_time == "") {
