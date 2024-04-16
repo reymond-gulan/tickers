@@ -255,9 +255,9 @@ function getAverage(symbol, initial, target)
         }
 
         if (target == 'initial_volume') {
-            $('#symbol-'+symbol+'-initial-volume-value').html(increase);
+            $('#symbol-'+symbol+'-initial-volume-value').html(parseFloat(increase).toFixed(2));
         } else {
-            $('#symbol-'+symbol+'-final-volume-value').html(increase);
+            $('#symbol-'+symbol+'-final-volume-value').html(parseFloat(increase).toFixed(2));
         }
         container.val('');
         return;
