@@ -7,8 +7,8 @@
             <th></th>
             <th>SYMBOL</th>
             <th class="d-none"></th>
-            <th>PRE-QUALIFYING AVERAGE</th>
-            <th>QUALIFYING AVERAGE</th>
+            <th class="d-none">PRE-QUALIFYING AVERAGE</th>
+            <th class="d-none">QUALIFYING AVERAGE</th>
             <th class="sort-qvps sort-by-rank" data-sort="desc">VOLUME CHANGE</th>
             <th class="d-none"></th>
             <th>QUALIFYING TIME</th>
@@ -44,8 +44,8 @@
                 <td class="d-none">
                     <input class="form-control" id="symbol-{{ $symbol }}-volume" class="volume text-xs border-0">
                 </td>
-                <td id="symbol-{{ $symbol }}-initial-volume-value"><!--- INITIAL VOLUME VALUE --></td>
-                <td id="symbol-{{ $symbol }}-final-volume-value"><!--- FINAL VOLUME VALUE --></td>
+                <td class="d-none" id="symbol-{{ $symbol }}-initial-volume-value"><!--- INITIAL VOLUME VALUE --></td>
+                <td class="d-none" id="symbol-{{ $symbol }}-final-volume-value"><!--- FINAL VOLUME VALUE --></td>
                 <td class="text-center" id="symbol-{{ $symbol }}-volume-average"><!--- VOLUME AVERAGE (QVPS) --></td>
                 <td class="d-none">
                     <input class="form-control" id="symbol-{{ $symbol }}-live-price" class="live-price">

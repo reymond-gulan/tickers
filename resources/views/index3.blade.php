@@ -88,6 +88,7 @@
                             <input type="text" class="form text-sm symbol border border-dark" id="symbol" readonly>
                             <input type="text" class="form text-sm symbol border border-dark" id="status" readonly>
                             <input type="text" class="form text-sm symbol border border-dark" id="collection_status">
+                            <input type="text" class="form text-sm symbol border border-dark" id="perpetual">
                         </div>
                         <div class="col-sm-2 p-0">
                             <button type="submit" class="btn btn-primary p-0 py-1 text-sm w-100 h-25" id="search" disabled>SEARCH</button>
@@ -179,6 +180,7 @@ function volumePercentage()
     var averaging_time = $('.volume_averaging_time').val();
     var qvpsValue = $('.qvps').val();
     var length = symbols.length;
+    var perpetual = $('#perpetual').val();
     $.each(symbols, function(){
         length -= 1;
         var symbol = $(this).data('symbol');
@@ -187,7 +189,8 @@ function volumePercentage()
 
         // var qvps = (parseFloat(final) / parseFloat(initial)) / parseInt(averaging_time);
         // var qvps = ((parseFloat(final) / parseFloat(initial)) * 100) / parseInt(averaging_time);
-        var qvps = (parseFloat(final) / parseFloat(initial));
+        // var qvps = (parseFloat(final) / parseFloat(initial));
+        var qvps = percentageIncrease(parseFloat(initial), parseFloat(final));
 
         if (isNaN(qvps) || !isFinite(qvps)) {
             qvps = 0;
@@ -197,15 +200,21 @@ function volumePercentage()
             qvpsValue = 3.99;
         }
 
-        if (parseFloat(qvps) < parseFloat(qvpsValue) || parseFloat(qvps) === 0) {
-            $('#symbol-'+symbol).addClass('d-none');
+        if (perpetual == "" || perpetual !== 'start') {
+            if (parseFloat(qvps) < parseFloat(qvpsValue) || parseFloat(qvps) === 0) {
+                $('#symbol-'+symbol).addClass('d-none');
+            }
         }
 
-        $('#symbol-'+symbol+'-volume-average').html(qvps.toFixed(2));
+        $('#symbol-'+symbol+'-volume-average').html(qvps);
 
-        if (length < 1) {
+        if (length < 1 && perpetual !== 'start') {
             // Final iteration, check if any token is qualified...
             checkIfHasQualified();
+        }
+
+        if (length < 1 && perpetual == 'start') {
+            checkIfHasRequalified();
         }
     });
 }
@@ -222,6 +231,22 @@ function checkIfHasQualified()
         $('#collection_status').val('');
         $('#restart').trigger('click');
     }
+}
+
+function checkIfHasRequalified()
+{
+    var symbols = $('.symbols.d-none');
+    var qvpsValue = $('.qvps').val();
+    $.each(symbols, function(){
+        var symbol = $(this).data('symbol');
+        var qvps = $('#symbol-'+symbol+'-volume-average').html();
+        if (parseFloat(qvps) > parseFloat(qvpsValue)) {
+            $('#symbol-'+symbol).removeClass('d-none');
+            console.log("New...");
+        }
+    });
+
+    $('.qualifying_status').html($('.symbols:not(.d-none)').length+" tokens...");
 }
 
 
@@ -525,10 +550,12 @@ function hhmmss(symbol, totalSeconds)
 
                     if (collection_status === 'volume') {
                         // collectVolume(e.s, parseFloat(e.v)); // Base Asset Volume
-                        collectVolume(e.s, parseFloat(e.q)); // Quote Asset Volume
+                        // collectVolume(e.s, parseFloat(e.q)); // Quote Asset Volume
                     } else if (collection_status === 'price') {
                         collectValues(e.s, parseFloat(e.c));
                     }
+
+                    collectVolume(e.s, parseFloat(e.v));
 
                     $('#symbol-'+e.s+'-latest').html(e.c);
                     var current = new Date().toLocaleString();
@@ -676,6 +703,7 @@ function hhmmss(symbol, totalSeconds)
         });
 
         $(document).on('click', '#start-blocks', function(){
+            $('#perpetual').val("start");
             var symbols = $('.symbols');
             var live_averaging_time = $('.live_averaging_time').val();
             var duration;
@@ -700,11 +728,12 @@ function hhmmss(symbol, totalSeconds)
                         getAverage(symbol, initial);
                     });
                     priceFilter();
-                }, 1000);
+                }, duration);
             }
         });
 
         $(document).on('click', '#start-initial', function(){
+            $('#perpetual').val("");
             $('.qualifying_status').append("Initial volume collection initialized... ");
             $('#status').val('start');
             var symbols = $('.symbols');
@@ -772,13 +801,14 @@ function hhmmss(symbol, totalSeconds)
 
         $(document).on('click', '#stop-final', function(){
             console.log("Final volume collection and averaging stopped... ");
-            clearInterval(finalAveraging);
+            // clearInterval(finalAveraging);
             volumePercentage();
+
         });
 
         $(document).on('click', '.qualifying_status', function(){
-            $('.qualifying_status').html("");
-            $('.qualifying_status').addClass("d-none");
+            // $('.qualifying_status').html("");
+            // $('.qualifying_status').addClass("d-none");
         });
 
         $(document).on('click', '#reset', function(){
