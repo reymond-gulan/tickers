@@ -112,6 +112,9 @@
         z-index:1000 !important;
         padding:0;
     }
+    .bg-danger{
+        display:none !important;
+    }
 </style>
 <body>
 <button type="button" class="btn btn-secondary toggle-settings px-3" id="toggle-settings">

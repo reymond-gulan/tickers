@@ -202,7 +202,7 @@ function volumePercentage()
 
         if (perpetual == "" || perpetual !== 'start') {
             if (parseFloat(qvps) < parseFloat(qvpsValue) || parseFloat(qvps) === 0) {
-                $('#symbol-'+symbol).addClass('d-none');
+                $('#symbol-'+symbol).addClass('bg-danger');
             }
         }
 
@@ -216,16 +216,21 @@ function volumePercentage()
         if (length < 1 && perpetual == 'start') {
             checkIfHasRequalified();
         }
+
+        if (length < 1 && perpetual == 'start') {
+            $('#start-initial').trigger('click');
+        }
     });
 }
 
 function checkIfHasQualified()
 {
-    var symbols = $('.symbols:not(.d-none)');
+    var symbols = $('.symbols:not(.bg-danger)');
     if (symbols.length > 0) {
         $('#collection_status').val('price');
         $('#start').trigger('click');
         $('#start-blocks').trigger('click');
+        $('#perpetual').val("start");
     } else {
         console.log("No token was qualified. Restarting...");
         $('#collection_status').val('');
@@ -235,18 +240,21 @@ function checkIfHasQualified()
 
 function checkIfHasRequalified()
 {
-    var symbols = $('.symbols.d-none');
+    var symbols = $('.symbols.bg-danger');
     var qvpsValue = $('.qvps').val();
     $.each(symbols, function(){
         var symbol = $(this).data('symbol');
         var qvps = $('#symbol-'+symbol+'-volume-average').html();
         if (parseFloat(qvps) > parseFloat(qvpsValue)) {
-            $('#symbol-'+symbol).removeClass('d-none');
-            console.log("New...");
+            $('#symbol-'+symbol).removeClass('bg-danger');
+            var current = new Date().toLocaleString();
+            var time = current.substring(10, (new String(current).length));
+            $('#symbol-'+symbol+'-qualifying-time').html(time.toLowerCase());
+            var now = parseInt($.now() / 1000);
+            $('#symbol-'+symbol+'-time').html(now);
         }
     });
-
-    $('.qualifying_status').html($('.symbols:not(.d-none)').length+" tokens...");
+    $('.qualifying_status').html($('.symbols:not(.bg-danger)').length+" token/s...");
 }
 
 
@@ -673,7 +681,6 @@ function hhmmss(symbol, totalSeconds)
         });
 
         $(document).on('click', '#start', function(){
-            console.log("Start button triggered...");
             $('#status').val('start');
             $('#start').html('START');
             $('#start').addClass('btn-success').removeClass('btn-warning');
@@ -703,11 +710,12 @@ function hhmmss(symbol, totalSeconds)
         });
 
         $(document).on('click', '#start-blocks', function(){
-            $('#perpetual').val("start");
+            $('#start-initial').trigger('click');
             var symbols = $('.symbols');
             var live_averaging_time = $('.live_averaging_time').val();
             var duration;
-            $('.qualifying_status').html($('.symbols:not(.d-none)').length+" tokens qualified...");
+
+            $('.qualifying_status').html($('.symbols:not(.bg-danger)').length+" token/s qualified...");
             $('.tokens-table').removeClass('d-none');
 
             if (live_averaging_time == "") {
@@ -733,11 +741,12 @@ function hhmmss(symbol, totalSeconds)
         });
 
         $(document).on('click', '#start-initial', function(){
-            $('#perpetual').val("");
-            $('.qualifying_status').append("Initial volume collection initialized... ");
+            var perpetual = $('#perpetual').val();
+            if (perpetual == "") {
+                $('.qualifying_status').append("Initial volume collection initialized... ");
+            }
             $('#status').val('start');
             var symbols = $('.symbols');
-            // var averaging_time = $('.volume_averaging_time').val();
             var averaging_time = $('.pre_qualifying').val();
             var duration;
 
@@ -747,12 +756,8 @@ function hhmmss(symbol, totalSeconds)
                 duration = new Number(averaging_time) * 1000;
             }
 
-            console.log("Duration: "+duration);
-
             if (symbols.length > 0) {
                 initialAveraging = setInterval(function(){
-                    console.log("Initial volume averaging triggered...");
-
                     $.each(symbols, function(){
                         var symbol = $(this).data('symbol');
                         getAverage(symbol, "", 'initial_volume');
@@ -770,10 +775,12 @@ function hhmmss(symbol, totalSeconds)
         });
 
         $(document).on('click', '#start-final', function(){
-            $('.qualifying_status').append("Final volume collection initialized... ");
+            var perpetual = $('#perpetual').val();
+            if (perpetual == "") {
+                $('.qualifying_status').append("Final volume collection initialized... ");
+            }
             $('#status').val('start');
             var symbols = $('.symbols');
-            // var averaging_time = $('.volume_averaging_time').val();
             var averaging_time = $('.qualifying').val();
             var duration;
 
@@ -783,12 +790,8 @@ function hhmmss(symbol, totalSeconds)
                 duration = new Number(averaging_time) * 1000;
             }
 
-            console.log("Duration: "+duration);
-
             if (symbols.length > 0) {
                 finalAveraging = setInterval(function(){
-                    console.log("Final volume averaging triggered...");
-
                     $.each(symbols, function(){
                         var symbol = $(this).data('symbol');
                         getAverage(symbol, "", 'final_volume');
@@ -801,9 +804,8 @@ function hhmmss(symbol, totalSeconds)
 
         $(document).on('click', '#stop-final', function(){
             console.log("Final volume collection and averaging stopped... ");
-            // clearInterval(finalAveraging);
+            clearInterval(finalAveraging);
             volumePercentage();
-
         });
 
         $(document).on('click', '.qualifying_status', function(){
