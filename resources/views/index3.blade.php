@@ -37,17 +37,67 @@
                         </table>
                     </div>
                     <div class="col-sm-2 py-2" style="background:#9294C2;">
-                        <table class="w-100 bg-transparent d-none">
+                        <table class="w-100 bg-transparent">
                             <tr>
-                                <th class="w-75 p-0">VOLUME AVERAGING TIME (seconds)</th>
+                                <th class="w-75 p-0">REQUALIFYING FREQUENCY (seconds)</th>
                                 <td class="p-0">
-                                    <input type="number" class="form border border-dark volume_averaging_time" name="volume_averaging_time">
+                                    <input type="number" class="form border border-dark requalifying" name="requalifying">
                                 </td>
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-2 py-2" style="background:#9294C2;">
-                        <table class="w-100 bg-transparent d-none">
+                    <div class="col-sm-1 pt-1" style="background:#9294C2;">
+                        <table class="w-100 bg-transparent">
+                            <tr>
+                                <th class="p-0 text-xs">
+                                    <center>SORT BY</center>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td class="p-0">
+                                <select class="form border border-dark sort_by" name="sort_by">
+                                        <option value="sym">SYMBOL</option>
+                                        <option value="volume_change">VOLUME CHANGE</option>
+                                        <option value="elapsed_time">ELAPSED TIME</option>
+                                        <option value="accum_change">ACCUM. CHANGE</option>
+                                        <option value="change_percent">CHANGE %</option>
+                                        <option value="change_per_second">CHANGE PER SECOND</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-sm-1 pt-3" style="background:#9294C2;">
+                        <table class="w-100 bg-transparent">
+                            <tr>
+                                <td class="p-0">
+                                    <select class="form border border-dark sort_type" name="sort_type">
+                                        <option value="asc">ascending</option>
+                                        <option value="desc">descending</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-sm-1 pt-1" style="background:#9294C2;">
+                        <table class="w-100 bg-transparent">
+                            <tr>
+                                <th class="p-0 text-xs">
+                                    <center>AUTO-SORT</center>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td class="p-0">
+                                    <select class="form border border-dark auto_sort" name="auto_sort">
+                                        <option value="no">no</option>
+                                        <option value="yes">yes</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-sm-1 py-2 d-none" style="background:#9294C2;">
+                        <table class="w-100 bg-transparent">
                             <tr>
                                 <th class="w-75 p-0">LIVE PRICE AVERAGING (seconds)</th>
                                 <td class="p-0">
@@ -56,7 +106,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-2 p-0">
+                    <div class="col-sm-1 p-0">
                         <button type="submit" class="btn btn-success h-100 text-sm w-100 rounded-0" id="save-settings">SAVE SETTINGS</button>
                     </div>
                 </div>
@@ -84,17 +134,20 @@
                         <div class="col-sm-1 p-0">
                             <input type="text" class="form price_filter border border-dark h-25" name="price_filter" id="price_filter" placeholder="PRICE FILTER">
                         </div>
-                        <div class="col-sm-1 p-0 px-2 d-none">
+                        <div class="col-sm-1 p-0 px-2">
                             <input type="text" class="form text-sm symbol border border-dark" id="symbol" readonly>
                             <input type="text" class="form text-sm symbol border border-dark" id="status" readonly>
                             <input type="text" class="form text-sm symbol border border-dark" id="collection_status">
                             <input type="text" class="form text-sm symbol border border-dark" id="perpetual">
                         </div>
-                        <div class="col-sm-2 p-0">
+                        <div class="col-sm-1 p-0">
                             <button type="submit" class="btn btn-primary p-0 py-1 text-sm w-100 h-25" id="search" disabled>SEARCH</button>
                         </div>
-                        <div class="col-sm-2 p-0">
+                        <div class="col-sm-1 p-0">
                             <button type="button" class="btn btn-success p-0 py-1 text-sm w-100 h-25" id="sort">SORT BY RANK</button>
+                        </div>
+                        <div class="col-sm-2 p-0">
+                            <button type="button" class="btn btn-primary p-0 py-1 text-sm w-100 h-25" id="refresh-timer" disabled>RESET REQUALIFYING TIMER</button>
                         </div>
                         <div class="col-sm-1 p-0 d-none">
                             <button type="button" class="btn btn-success p-0 py-1 text-sm w-100 d-none" id="start">START <span id="elapsed"></span></button>
@@ -109,6 +162,7 @@
                         </div>
                         <div class="col-sm-1 p-0 d-none">
                             <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none" id="reset">RESET</button>
+                            <button type="button" class="btn btn-info p-0 py-1 text-sm w-100 d-none reset">RESET</button>
                         </div>
                         <div class="col-sm-1 p-0 d-none">
                             <button type="button" class="btn btn-danger p-0 py-1 text-sm w-100 d-none" id="stop">STOP</button>
@@ -231,6 +285,7 @@ function checkIfHasQualified()
         $('#start').trigger('click');
         $('#start-blocks').trigger('click');
         $('#perpetual').val("start");
+        $('#refresh-timer').attr('disabled', false);
     } else {
         console.log("No token was qualified. Restarting...");
         $('#collection_status').val('');
@@ -255,6 +310,13 @@ function checkIfHasRequalified()
         }
     });
     $('.qualifying_status').html($('.symbols:not(.bg-danger)').length+" token/s...");
+
+    setTimeout(function(){
+        var auto_sort = $('.auto_sort').val();
+        if (auto_sort == 'yes') {
+            autoSort();
+        }
+    }, 1000);
 }
 
 
@@ -486,6 +548,13 @@ function hhmmss(symbol, totalSeconds)
     $('#symbol-'+symbol+'-elapsed-time').html(hours + ":" + minutes + ":" + seconds);
 }
 
+function autoSort()
+{
+    console.log('auto sort triggered...');
+    var sort_by = $('.sort_by').val();
+    $('.'+sort_by).trigger('click');
+}
+
     $(function(){
 
         var interval, startTime, averaging, initialAveraging, finalAveraging;
@@ -592,6 +661,9 @@ function hhmmss(symbol, totalSeconds)
                 $('#collection_status').val('volume');
                 $('.elapsed').addClass('d-none');
                 $('.tokens-table').addClass('d-none');
+                $('.reset').trigger('click');
+                $('#perpetual').val("");
+                $('.qualifying_status').html('...');
 
                 clearInterval(interval);
                 clearInterval(averaging);
@@ -680,6 +752,30 @@ function hhmmss(symbol, totalSeconds)
             $('#form2').trigger('submit');
         });
 
+        $(document).on('click', '.reset', function(){
+            clearInterval(finalAveraging);
+            clearInterval(initialAveraging);
+            clearInterval(interval);
+            clearInterval(averaging);
+        });
+
+        $(document).on('click', '#refresh-timer', function(){
+            $('#refresh-timer').html('Refreshing...');
+            $('#refresh-timer').attr('disabled', true);
+            clearInterval(finalAveraging);
+            clearInterval(initialAveraging);
+            $('#start-initial').trigger('click');
+            setTimeout(function(){
+                $('#refresh-timer').html('RESET SUCCESSFUL');
+                $('#refresh-timer').attr('disabled', false);
+            }, 2000);
+
+            setTimeout(function(){
+                $('#refresh-timer').html('RESET REQUALIFYING TIMER');
+                $('#refresh-timer').attr('disabled', false);
+            }, 4000);
+        });
+
         $(document).on('click', '#start', function(){
             $('#status').val('start');
             $('#start').html('START');
@@ -744,10 +840,13 @@ function hhmmss(symbol, totalSeconds)
             var perpetual = $('#perpetual').val();
             if (perpetual == "") {
                 $('.qualifying_status').append("Initial volume collection initialized... ");
+                var averaging_time = $('.pre_qualifying').val();
+            } else {
+                var averaging_time = $('.requalifying').val();
             }
+            
             $('#status').val('start');
             var symbols = $('.symbols');
-            var averaging_time = $('.pre_qualifying').val();
             var duration;
 
             if (averaging_time == "") {
@@ -778,10 +877,13 @@ function hhmmss(symbol, totalSeconds)
             var perpetual = $('#perpetual').val();
             if (perpetual == "") {
                 $('.qualifying_status').append("Final volume collection initialized... ");
+                var averaging_time = $('.qualifying').val();
+            } else {
+                var averaging_time = $('.requalifying').val();
             }
+
             $('#status').val('start');
             var symbols = $('.symbols');
-            var averaging_time = $('.qualifying').val();
             var duration;
 
             if (averaging_time == "") {

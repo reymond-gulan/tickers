@@ -5,22 +5,21 @@
     <thead style="cursor:pointer;">
         <tr id="list-header" class="border-bottom border-secondary">
             <th></th>
-            <th>SYMBOL</th>
+            <th class="sym">SYMBOL</th>
             <th class="d-none"></th>
             <th class="d-none">PRE-QUALIFYING AVERAGE</th>
             <th class="d-none">QUALIFYING AVERAGE</th>
-            <th class="sort-qvps sort-by-rank" data-sort="desc">VOLUME CHANGE</th>
+            <th class="volume_change">VOLUME CHANGE</th>
             <th class="d-none"></th>
             <th>QUALIFYING TIME</th>
             <th>CURRENT TIME</th>
             <th class="d-none">ELAPSED (seconds)</th>
-            <th>ELAPSED TIME</th>
+            <th class="elapsed_time">ELAPSED TIME</th>
             <th>START PRICE</th>
             <th>LATEST PRICE</th>
-            <th></th>
-            <th>ACCUM. CHANGE</th>
-            <th class="sort sort-by-rank d-none" data-sort="desc">CHANGE %</th>
-            <th>CHANGE per SECOND</th>
+            <th class="accum_change">ACCUM. CHANGE</th>
+            <th class="change_percent" data-sort="desc">CHANGE %</th>
+            <th class="change_per_second">CHANGE per SECOND</th>
         </tr>
     </thead>
     <tbody class="symbols-body">
