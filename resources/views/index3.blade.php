@@ -26,7 +26,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-2 p-2" style="background:#FBC6B1;">
+                    <div class="col-sm-2 p-2" style="background:#9294C2;">
                         <table class="w-100 bg-transparent">
                             <tr>
                                 <th class="p-0 text-right">MINIMUM&nbsp;QUALIFIER&nbsp;</th>
@@ -134,7 +134,7 @@
                         <div class="col-sm-1 p-0">
                             <input type="text" class="form price_filter border border-dark h-25" name="price_filter" id="price_filter" placeholder="PRICE FILTER">
                         </div>
-                        <div class="col-sm-1 p-0 px-2">
+                        <div class="col-sm-1 p-0 px-2 d-none">
                             <input type="text" class="form text-sm symbol border border-dark" id="symbol" readonly>
                             <input type="text" class="form text-sm symbol border border-dark" id="status" readonly>
                             <input type="text" class="form text-sm symbol border border-dark" id="collection_status">
