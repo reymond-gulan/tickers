@@ -553,6 +553,11 @@ function autoSort()
     console.log('auto sort triggered...');
     var sort_by = $('.sort_by').val();
     $('.'+sort_by).trigger('click');
+    $('.'+sort_by).addClass('bg-secondary');
+
+    setTimeout(function(){
+        $('.'+sort_by).removeClass('bg-secondary');
+    }, 1000);
 }
 
     $(function(){
