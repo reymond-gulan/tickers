@@ -17,9 +17,9 @@
             <th>ELAPSED TIME</th>
             <th>START PRICE</th>
             <th>LATEST PRICE</th>
-            <th class="sort sort-by-rank d-none" data-sort="desc"></th>
+            <th></th>
             <th>ACCUM. CHANGE</th>
-            <th>CHANGE %</th>
+            <th class="sort sort-by-rank d-none" data-sort="desc">CHANGE %</th>
             <th>CHANGE per SECOND</th>
         </tr>
     </thead>

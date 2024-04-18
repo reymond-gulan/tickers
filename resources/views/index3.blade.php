@@ -176,7 +176,7 @@ $(function(){
 
 function volumePercentage()
 {
-    var symbols = $('.symbols:not(.d-none)');
+    var symbols = $('.symbols');
     var averaging_time = $('.volume_averaging_time').val();
     var qvpsValue = $('.qvps').val();
     var length = symbols.length;
@@ -420,7 +420,7 @@ function getAverage(symbol, initial, target)
 
 function priceFilter()
 {
-    var symbols = $('.symbols:not(".d-none")');
+    var symbols = $('.symbols:not(".bg-danger")');
     $.each(symbols, function(){
         var symbol = $(this).data('symbol');
         var price_filter = $('#price_filter').val();
@@ -428,9 +428,9 @@ function priceFilter()
         if (price_filter !== '') {
             var price = $('#symbol-'+symbol+'-price').html();
             if (price_type == 'above' && parseFloat(price) < parseFloat(price_filter)) {
-                $('#symbol-'+symbol).addClass('d-none');
+                $('#symbol-'+symbol).addClass('bg-danger');
             } else if (price_type == 'below' && parseFloat(price) > parseFloat(price_filter)) {
-                $('#symbol-'+symbol).addClass('d-none');
+                $('#symbol-'+symbol).addClass('bg-danger');
             }
         }
     });
@@ -438,7 +438,7 @@ function priceFilter()
 
 function addRanking()
 {
-    var symbols = $('.symbols:not(.d-none)');
+    var symbols = $('.symbols:not(.bg-danger)');
     var i = 0;
 
     $.each(symbols, function(){
