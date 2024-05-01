@@ -159,10 +159,9 @@
                 <table class="w-100 bg-transparent" id="table">
                     <thead style="cursor:pointer;">
                         <tr id="list-header" class="border-bottom border-secondary">
-                            <th style="width:50px !important;"></th>
                             <th style="width:50px !important;">SYMBOL</th>
                             <th style="width:80px !important;">CURRENT PRICE</th>
-                            <th class="sort" data-sort="desc" style="text-align:left !important;width:50px !important;">%</th>
+                            <th class="sort" data-sort="desc" style="text-align:left !important;width:50px !important;"></th>
                             <th style="width:100px !important;"></th>
                             <th></th>
                         </tr>
@@ -175,10 +174,9 @@
                 <table class="w-100 bg-transparent text-xs" id="table">
                     <thead style="cursor:pointer;">
                         <tr id="list-header" class="border-bottom border-secondary">
-                            <th style="width:50px !important;"></th>
                             <th style="width:50px !important;">SYMBOL</th>
                             <th style="width:80px !important;">CURRENT PRICE</th>
-                            <th class="sort" data-sort="desc" style="text-align:left !important;width:50px !important;">%</th>
+                            <th class="sort" data-sort="desc" style="text-align:left !important;width:50px !important;"></th>
                             <th style="width:100px !important;"></th>
                             <th></th>
                         </tr>
@@ -339,7 +337,6 @@ function priceFilter()
                                     if (change > min_avg_cps) {
                                         var cps = (change / 2.5);
                                         html += '<tr class="border-bottom border-secondary symbols" data-symbol="'+symbol+'" id="symbol-'+symbol+'">\
-                                                <td></td>\
                                                 <td class="text-center">\
                                                     <b>\
                                                     <a target="_blank" style="width:150px !important;" href="https://www.binance.com/en/trade/'+symbol+'?type=spot">'+symbol+'</a>\
@@ -362,7 +359,6 @@ function priceFilter()
                                     if (parseFloat(e.P) > parseFloat(min_avg_cps2)) {
                                         var cps = (change / 2.5);
                                         html2 += '<tr id="symbol-'+symbol+'" data-symbol="'+symbol+'" class="symbols border-bottom border-secondary">\
-                                                <td></td>\
                                                 <td class="text-center">\
                                                     <b>\
                                                     <a target="_blank" style="width:150px !important;" href="https://www.binance.com/en/trade/'+symbol+'?type=spot">'+symbol+'</a>\
