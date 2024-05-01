@@ -32,6 +32,23 @@ class WebController extends Controller
         return view('index3', compact('setting', 'symbols', 'customTokens'));
     }
 
+    public function index2(Request $request)
+    {
+        $data = $request->all();
+        $user_id = $this->userId;
+        $setting = Setting::where('user_id', $user_id)->first();
+        $symbols = Symbol::all();
+
+        $customTokens = CustomToken::where('user_id', $user_id)->get();
+
+        if (!empty($setting)) {
+            $setting = $setting->toArray();
+            $setting = json_decode($setting['setting'], true);
+        }
+
+        return view('index', compact('setting', 'symbols', 'customTokens'));
+    }
+
     public function batch(Request $request)
     {
         $data = $request->all();
@@ -153,6 +170,27 @@ class WebController extends Controller
 
 
         $html = view('list', compact('tickers', 'result', 'percentage', 'options', 'live', 'sym', 'symbols', 'sub'))->render();
+        return $html;
+    }
+
+    public function list2(Request $request)
+    {
+        $data = $request->all();
+        $html = "";
+        $user_id = $this->userId;
+
+        $setting = Setting::where('user_id', $user_id)->first();
+        $setting = json_decode($setting['setting'], true);
+
+
+        $symbol = strtoupper($data['symbol']) ?? 'ALL';
+        $symbols = Symbol::when(!empty($symbol) && $symbol !== 'ALL', function($query) use ($symbol){
+                            $query->where('symbol', 'LIKE', "%{$symbol}");
+                        })->get()
+                        ->toArray();
+        $sym = $symbol;
+
+        $html = view('list2', compact('sym', 'symbols'))->render();
         return $html;
     }
 

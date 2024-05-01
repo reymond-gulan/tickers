@@ -25,6 +25,9 @@ Route::post('/market-ticker', [Controllers\WebController::class, 'marketTicker']
 Route::post('/custom-token/save', [Controllers\WebController::class, 'customTokenSave'])->name('custom-token-save');
 Route::post('/custom-token/remove', [Controllers\WebController::class, 'customTokenRemove'])->name('custom-token-remove');
 
+Route::get('/v2', [Controllers\WebController::class, 'index2']);
+Route::get('/coins/list2', [Controllers\WebController::class, 'list2'])->name('coins-list2');
+
 Route::get('/symbols', [Controllers\WebController::class, 'symbols'])->name('get-symbols');
 
 Route::get('/get/data', [Controllers\WebController::class, 'getData'])->name('get-raw-data');

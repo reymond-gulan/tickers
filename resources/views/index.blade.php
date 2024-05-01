@@ -1,176 +1,194 @@
 @extends('layouts.app')
 @section('content')
-<div class="container-fluid w-100">
-    <div class="col-sm-12">
-        <!--- BODY *** start *** -->
-        <form action="{{ route('save-settings') }}" method="POST" id="settings-form">
-        @csrf
-        <div class="row mt-2">
-            <div class="col-sm-3 p-2" style="background:#F79B7F;">
-                <table class="w-100 bg-transparent">
-                    <tr>
-                        <th>Weight Factor Number</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="text" class="form border border-dark wfn" name="wfn">
-                        </td>
-                        <!-- <td><b>Volume:</b></td>
-                        <td>
-                            <input type="text" class="form border border-dark wfn_volume" name="wfn_volume">
-                        </td>
-                        <td><b>Price:</b></td>
-                        <td>
-                            <input type="text" class="form border border-dark wfn_price" name="wfn_price">
-                        </td>
-                        <td><b>Trades:</b></td>
-                        <td>
-                            <input type="text" class="form border border-dark wfn_trades" name="wfn_trades">
-                        </td> -->
-                    </tr>
-                </table>
-            </div>
-            <div class="col-sm-5 p-2" style="background:#FBC6B1;">
-                <table class="w-100 bg-transparent">
-                    <tr>
-                        <th colspan="6">Past Averaging</th>
-                    </tr>
-                    <tr>
-                        <td><b>Start:</b></td>
-                        <td>
-                            <input type="text" class="form border border-dark start_time" name="start_time">
-                        </td>
-                        <td>
-                            <select name="start_time_unit" class="start_time_unit form border border-dark">
-                                <option value="seconds">seconds</option>
-                                <option value="minutes">minutes</option>
-                                <option value="hours">hours</option>
+<div class="container-fluid bg-white">
+        <div class="col-sm-12 sticky bg-white p-0 mt-4">
+            <!--- BODY *** start *** -->
+            <form action="{{ route('save-settings') }}" method="POST" id="settings-form">
+                @csrf
+                <div class="row">
+                    <div class="col-sm-6 p-2" style="background:#FBC6B1;">
+                        <table class="w-100 bg-transparent">
+                            <tr>
+                                <th class="p-0 text-right col-sm-4">TIME PER BLOCK (seconds):&nbsp;</th>
+                                <td>
+                                    <input type="number" class="form border border-dark time_per_block" name="time_per_block">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-sm-6 p-2" style="background:#FBC6B1;">
+                        <table class="w-100 bg-transparent">
+                            <tr>
+                                <th class="p-0 text-right col-sm-4">AUTO RESTART FREQUENCY (seconds):&nbsp;</th>
+                                <td>
+                                    <input type="number" class="form border border-dark auto_start_frequency" name="auto_start_frequency">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 p-2" style="background:#8cd98c">
+                        <table class="w-100 bg-transparent">
+                            <tr>
+                                <th colspan="2" class="p-0 text-right">Minimum Average Change per second (+) :&nbsp;</th>
+                                <td colspan="2" class="w-50">
+                                    <input type="text" class="form border border-dark min_avg_cps" name="min_avg_cps">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="p-0 text-right">Purity Requirement :&nbsp;</th>
+                                <td class="w-25">
+                                    <input type="number" class="form border border-dark purity_requirement" name="purity_requirement">
+                                </td>
+                                <th class="p-0 text-right">Sort by :&nbsp;</th>
+                                <td class="w-25">
+                                    <select type="text" class="form symbol border border-dark sort_by_positive" name="sort_by_positive">
+                                        <option value="cps" selected>CPS</option>
+                                        <option value="price_change">Price Change</option>
+                                        <option value="price">Price</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-sm-4 p-2" style="background:#ff8080">
+                        <table class="w-100 bg-transparent">
+                            <tr>
+                                <th colspan="2" class="p-0 text-right">Minimum Average Change per second (-) :&nbsp;</th>
+                                <td colspan="2" class="w-50">
+                                    <input type="text" class="form border border-dark min_avg_cps2" name="min_avg_cps2">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="p-0 text-right">Minimum 2-min drop :&nbsp;</th>
+                                <td class="w-25">
+                                    <input type="number" class="form border border-dark min_2_min_drop" name="min_2_min_drop">
+                                </td>
+                                <th class="p-0 text-right">Sort by :&nbsp;</th>
+                                <td class="w-25">
+                                    <select type="text" class="form symbol border border-dark sort_by_negative" name="sort_by_negative">
+                                        <option value="cps" selected>CPS</option>
+                                        <option value="price_change">Price Change</option>
+                                        <option value="biggest_drop">Biggest Drop</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-sm-4 p-2" style="background:#ccc">
+                        <table class="w-100 bg-transparent">
+                            <tr>
+                                <th class="p-0 text-right text-white col-sm-3">Sort by :&nbsp;</th>
+                                <td class="w-75">
+                                    <select type="text" class="form symbol border border-dark sort_by_zero" name="sort_by_zero">
+                                        <option value="cps" selected>CPS</option>
+                                        <option value="price_change">Price Change</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-white px-2">
+                                    <div class="row">
+                                    <input type="hidden" id="status" readonly>
+                                    <input type="hidden" id="time-elapsed" value="0" readonly>
+                                    <button type="submit" class="btn btn-success h-100 text-sm rounded-0" id="save-settings">SAVE SETTINGS</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </form>
+            <form action="{{ route('calculate') }}" method="POST" id="form2">
+                @csrf
+                <div class="row p-1 alert alert-success my-0">
+                        <div class="col-sm-1 p-0">
+                            <select type="text" class="form symbol border border-dark h-25" name="symbol" id="symbol-filter">
+                                <option value="USDT" selected>USDT</option>
+                                <option value="BTC">BTC</option>
+                                <option value="SOL">SOL</option>
+                                <option value="BNB">BNB</option>
+                                <option value="TUSD">TUSD</option>
+                                <option value="ALL">ALL</option>
                             </select>
-                        </td>
-                        <td><b>Duration:</b></td>
-                        <td>
-                            <input type="text" class="form border border-dark duration" name="duration">
-                        </td>
-                        <td>
-                            <select name="duration_unit" class="duration_unit form border border-dark">
-                                <option value="seconds">seconds</option>
-                                <option value="minutes">minutes</option>
-                                <option value="hours">hours</option>
+                        </div>
+                        <div class="col-sm-1 p-0">
+                            <select type="text" class="form price_type border border-dark h-25" name="price_type" id="price_type">
+                                <option value="all">ALL</option>
+                                <option value="above">ABOVE</option>
+                                <option value="below">BELOW</option>
                             </select>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col-sm-2 p-2" style="background:#9294C2;">
-                <table class="w-100 bg-transparent">
-                    <tr>
-                        <th colspan="6">Live Averaging</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="text" class="form border border-dark live_averaging_time" name="live_averaging_time">
-                        </td>
-                        <td>
-                            <select name="live_averaging_time_unit" class="live_averaging_time_unit form border border-dark">
-                                <option value="seconds">seconds</option>
-                                <option value="minutes">minutes</option>
-                                <option value="hours">hours</option>
+                        </div>
+                        <div class="col-sm-1 p-0">
+                            <input type="text" class="form price_filter border border-dark h-25" name="price_filter" id="price_filter" placeholder="PRICE FILTER">
+                        </div>
+                        <div class="col-sm-2 px-1">
+                            <button type="submit" class="btn btn-primary w-100 h-100 text-sm rounded-1" id="search">SEARCH</button>
+                            <button type="button" class="btn btn-primary w-100 h-100 text-sm rounded-1 d-none" id="start">START</button>
+                        </div>
+                        <div class="col-sm-2 custom d-none">
+                            <select class="custom-symbols h-25 w-100" name="custom-symbol" id="custom-symbol">
+                                @foreach($symbols as $symbol)
+                                    <option value="{{ $symbol['symbol'] }}">{{ $symbol['symbol'] }}</option>
+                                @endforeach
                             </select>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col-sm-2 p-2" style="background:#9294C2;">
-                <table class="w-100 bg-transparent">
-                    <tr>
-                        <th colspan="2">Screen Refresh Frequency</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="text" class="form border border-dark srf_time" name="srf_time">
-                        </td>
-                        <td>
-                            <select name="srf_time_unit" class="srf_time_unit form border border-dark">
-                                <option value="seconds">seconds</option>
-                                <option value="minutes">minutes</option>
-                                <option value="hours">hours</option>
-                            </select>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+                            
+                            <button type="button" class="btn btn-success add-custom-symbol p-0 px-2">+</button>
+                        </div>
+                        <div class="col-sm-3 border border-secondary elapsed d-none rounded-1">
+                            <center>
+                            Time Elapsed <span class="badge badge-success bg-success" id="elapsed"></span>
+                            </center>
+                        </div>
+            </form>
         </div>
-
+        <div class="row p-0 my-1 custom-tokens d-none" id="custom-symbols">
+            <input type="hidden" id="choice" class="border border-0" readonly>
+                <div class="col-sm-2">&bull; <span id="btc-label"></span><span id="btc"></span></div>
+                <div class="col-sm-2">&bull; <span id="eth-label"></span><span id="eth"></span></div> 
+                <div class="col-sm-2">&bull; <span id="sol-label"></span><span id="sol"></span></div>
+                @if (count($customTokens) > 0)
+                    @foreach($customTokens as $custom)
+                        <div class="col-sm-2"><span class="remove-custom" style="cursor:pointer;" data-symbol="{{ $custom['symbol'] }}" id="custom{{ $custom['symbol'] }}">&bull; <span id="custom-symbol-{{ $custom['symbol'] }}">{{ $custom['symbol'] }} $</span><span id="custom-{{ $custom['symbol'] }}"></span></span></div>
+                    @endforeach
+                @endif
+        </div>
         <div class="row">
-            <div class="col-sm-3 p-2" style="background:#FBC6B1;">
-                <table class="w-100 bg-transparent">
-                    <tr>
-                        <th colspan="2">Toggle Averaging</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="checkbox" class="toggle_volume" name="toggle_volume"> Volume
-                            &nbsp;&nbsp;&nbsp;
-                            <input type="checkbox" class="toggle_price" name="toggle_price"> Price
-                            &nbsp;&nbsp;&nbsp;
-                            <input type="checkbox" class="toggle_trades" name="toggle_trades"> Trades
-                        </td>
-                    </tr>
+            <div class="col-sm-6">
+                <table class="w-100 bg-transparent" id="table">
+                    <thead style="cursor:pointer;">
+                        <tr id="list-header" class="border-bottom border-secondary">
+                            <th style="width:50px !important;"></th>
+                            <th style="width:50px !important;">SYMBOL</th>
+                            <th style="width:80px !important;">CURRENT PRICE</th>
+                            <th class="sort" data-sort="desc" style="text-align:left !important;width:50px !important;">%</th>
+                            <th style="width:100px !important;"></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="symbols-body text-xs" id="positive-tokens">
+                    </tbody>
                 </table>
             </div>
-            <div class="col-sm-9 p-2" style="background:#FBC6B1;">
-                <table class="w-100 bg-transparent">
-                    <tr>
-                        <th colspan="2">Alert 1</th>
-                        <th colspan="2">Alert 2</th>
-                        <th colspan="2">Alert 3</th>
-                        <th colspan="2">Alert 4</th>
-                        <th colspan="2">Alert 5</th>
-                    </tr>
-                    <tr>
-                        @for($i = 1; $i <= 5; $i++)
-                        <td>
-                            <input type="text" class="form border border-dark alert{{ $i }}" name="alert{{ $i }}">
-                        </td>
-                        <td>
-                            <select name="alert{{ $i }}_type" class="alert{{ $i }}_type form border border-dark">
-                                <option value="beep">Beep</option>
-                                <option value="flash">Flash</option>
-                                <option value="beep_flash">Beep &amp; Flash</option>
-                            </select>
-                        </td>
-                        @endfor
-                    </tr>
+            <div class="col-sm-6">
+                <table class="w-100 bg-transparent text-xs" id="table">
+                    <thead style="cursor:pointer;">
+                        <tr id="list-header" class="border-bottom border-secondary">
+                            <th style="width:50px !important;"></th>
+                            <th style="width:50px !important;">SYMBOL</th>
+                            <th style="width:80px !important;">CURRENT PRICE</th>
+                            <th class="sort" data-sort="desc" style="text-align:left !important;width:50px !important;">%</th>
+                            <th style="width:100px !important;"></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="symbols-body" id="negative-tokens">
+                    </tbody>
                 </table>
             </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-sm-8"></div>
-            <div class="col-sm-4 p-0">
-                <button type="submit" class="btn btn-success p-0 px-5 text-sm w-100" id="save-settings">SAVE SETTINGS</button>
+            <div id="list-container" class="col-sm-4"></div>
             </div>
-        </div>
-        </form>
-        <form action="{{ route('calculate') }}" method="POST" id="form2">
-        @csrf
-        <div class="row">
-            <div class="col-sm-8 p-0 px-2">
-                <input type="text" class="form text-sm symbol border border-dark" name="symbol" id="symbol-filter" placeholder="SYMBOL FILTER...">
-                <input type="hidden" class="form text-sm symbol border border-dark" id="symbol" readonly>
-            </div>
-            <div class="col-sm-2 p-0">
-                <button type="submit" class="btn btn-primary p-0 px-5 text-sm w-100" id="start">START</button>
-                <button type="button" class="btn btn-warning p-0 px-5 text-sm w-100 d-none" id="resume">RESUME</button>
-            </div>
-            <div class="col-sm-2 p-0">
-                <input type="hidden" id="screen-refresh" readonly>
-                <button type="button" class="d-none btn btn-primary p-0 px-5 text-sm w-100" id="trigger-live">TRIGGER LIVE</button>
-                <button type="button" class="btn btn-danger p-0 px-5 text-sm w-100 d-none" id="stop">STOP</button>
-            </div>
-        </div>
-        </form>
-        <div id="list-container"></div>
     <!--- BODY *** end *** -->
     </div>
 </div>
@@ -178,7 +196,7 @@
 <script>
 $(function(){
 @foreach($setting as $key => $value)
-    @if (in_array($key, ['toggle_trades', 'toggle_volume', 'toggle_price']))
+    @if (in_array($key, ['toggle_trades', 'toggle_volume', 'toggle_price','choice']))
         $('.{{$key}}').attr('checked', true);
     @else
         $('.{{$key}}').val('{{$value}}');
@@ -188,66 +206,273 @@ $(function(){
 </script>
 @endif
 <script>
-function list(symbol, list)
+function filterZeroes()
 {
-    $.ajax({
-        url:'{{route("calculate")}}',
-        method:'GET',
-        data:{
-            symbol:symbol,
-            list:list
-        },
-        dataType:'json',
-        success:function(response){
-            console.log(response);
-            if (list) {
-                $('#list-container').html(response.html);
-                $('#start').html('START');
-                $('#start').attr('disabled', false);
-                $('#screen-refresh').val(response.screenRefresh);
-                $('#trigger-live').trigger('click');
-                $('#stop').removeClass('d-none');
-            } else {
-                var tickers = response.tickers;
-                $.each(tickers, function(i, e){
-                    var momentum = (e.volume * e.price) * e.wfn;
-                    var momentumWidth;
-                    if (momentum < 1) {
-                         momentumWidth = 0;
-                    } else {
-                        var length = momentum.toFixed().length;
-                        length = 100 * length;
-                        momentumWidth = momentum / length;
-                    }
-                    var html = '<p class="my-0" style="background:#BDB6DE;width:'+momentumWidth.toFixed()+'%;max-width:100%;">'+momentum.toFixed(5)+'</p>';
-                    $('#price-change-'+i).html(e.price);
-                    $('#volume-change-'+i).html(e.volume);
-                    $('#momentum-'+i).html(html);
-                });
+    var symbols = $('.symbols');
+    $.each(symbols, function(){
+        var symbol = $(this).data('symbol');
+        var price_change = $('#symbol-'+symbol+'-price-change-percent').html();
 
-                // $('#sort').trigger('click');
+        if (price_change === "") {
+            $('.symbols').addClass('bg-danger');
+            $('#symbol-'+symbol).removeClass('bg-danger');
+        }
+    });
+}
+
+function priceFilter()
+{
+    var symbols = $('.symbols');
+    $.each(symbols, function(){
+        var symbol = $(this).data('symbol');
+        if (price_filter !== '') {
+            var price_filter = $('#price_filter').val();
+            var price_type = $('#price_type').val();
+            var price = $('#symbol-'+symbol+'-price').html();
+            if (price_type == 'above' && parseFloat(price) < parseFloat(price_filter)) {
+                $('#symbol-'+symbol).addClass('bg-danger');
+            } else if (price_type == 'below' && parseFloat(price) > parseFloat(price_filter)) {
+                $('#symbol-'+symbol).addClass('bg-danger');
             }
-        }, error:function(response){
-            alert("An error occurred. Re-submit request.");
-            $('#start').html('START');
-            $('#start').attr('disabled', false);
         }
     });
 }
 
     $(function(){
-        $(document).on('submit', '#form2', function(e){
+
+        var interval, startTime, averaging, initialAveraging, finalAveraging;
+        const url = "wss://stream.binance.com:9443/ws/";
+        const ticker = "!ticker_1h@arr";
+        const socket = new WebSocket(url + ticker);
+        socket.addEventListener("error", (event) => {
+            $('.feed-status').html("Connection cannot be established...");
+        });
+
+        socket.onmessage = function (event) {
+            var data = JSON.parse(event.data);
+            var status = $('#status').val();
+            var time_elapsed = $('#time-elapsed').val();
+            var time_per_block = $('.time_per_block').val();
+
+            var price_type = $('#price_type').val();
+            var price_filter = $('#price_filter').val();
+            var symbol_filter = $('#symbol-filter').val();
+
+            if (status == 'start') {
+                $('.custom-tokens').removeClass('d-none');
+                $.each(data, function(i, e){
+                    var collection_status = $('#collection_status').val();
+                    var custom = $('#custom-'+e.s);
+
+                    if ($('.symbol-'+e.s+'-price').html() == "") {
+                        $('.symbol-'+e.s+'-price').html(e.c);
+                    }
+
+                    if (custom.html() !== undefined) {
+                        if (new Number(custom.html()) > e.c) {
+                            custom.addClass('text-danger').removeClass('text-success');
+                        } else {
+                            custom.removeClass('text-danger').addClass('text-success');
+                        }
+                        custom.html(e.c);
+                    }
+
+                    if (e.s == 'BTCUSDT') { 
+                        var btc = $('#btc').html();
+                        if (new Number(btc) > e.c) {
+                            $('#btc').addClass('text-danger').removeClass('text-success');
+                        } else {
+                            $('#btc').removeClass('text-danger').addClass('text-success');
+                        }
+                        $('#btc-label').html('BTC $');
+                        $('#btc').html(parseFloat(e.c).toFixed(2));
+                    }
+
+                    if (e.s == 'ETHUSDT') {
+                        var eth = $('#eth').html(); 
+                        if (new Number(eth) > e.c) {
+                            $('#eth').addClass('text-danger').removeClass('text-success');
+                        } else {
+                            $('#eth').removeClass('text-danger').addClass('text-success');
+                        }
+                        $('#eth-label').html('ETH $');
+                        $('#eth').html(parseFloat(e.c).toFixed(2));
+                    }
+
+                    if (e.s == 'SOLUSDT') {
+                        var sol = $('#sol').html();
+                        if (new Number(sol) > e.c) {
+                            $('#sol').addClass('text-danger').removeClass('text-success');
+                        } else {
+                            $('#sol').removeClass('text-danger').addClass('text-success');
+                        }
+                        $('#sol-label').html('SOL $');
+                        $('#sol').html(parseFloat(e.c).toFixed(2));
+                    }
+                    
+                    if ($('#symbol-'+e.s+'-price').html() !== undefined && $('#symbol-'+e.s+'-price').html() == "") {
+                        $('#symbol-'+e.s+'-price').html(parseFloat(e.c).toFixed(2));
+                    }
+
+
+                    if (parseInt(time_elapsed) == parseInt(time_per_block)) {
+
+                        $('#positive-tokens').html("");
+                        $('#negative-tokens').html("");
+                        $('#symbol-'+e.s+'-current-price').html(e.c);
+                        $('#symbol-'+e.s+'-price-change-percent').html(e.P);
+
+                        
+                        var min_avg_cps = parseFloat($('.min_avg_cps').val());
+                        var min_avg_cps2 = $('.min_avg_cps2').val();
+
+                        var symbol = e.s;
+                        var change = parseFloat(e.P);
+                        var html = '';
+                        var html2 = '';
+
+                        var hasString = symbol.indexOf(symbol_filter);
+
+                        if (hasString > 0) {
+                            setTimeout(function(){
+                                if (e.P !== "" && Math.sign(change) === 1) {
+                                    if (change > min_avg_cps) {
+                                        var cps = (change / 2.5);
+                                        html += '<tr class="border-bottom border-secondary symbols" data-symbol="'+symbol+'" id="symbol-'+symbol+'">\
+                                                <td></td>\
+                                                <td class="text-center">\
+                                                    <b>\
+                                                    <a target="_blank" style="width:150px !important;" href="https://www.binance.com/en/trade/'+symbol+'?type=spot">'+symbol+'</a>\
+                                                    </b>\
+                                                </td>\
+                                                <td class="text-center" id="symbol-'+symbol+'-price">'+e.c+'</td>\
+                                                <td style="text-align:left !important;" class="text-center">'+e.P+'</td>\
+                                                <td>\
+                                                    <p class="m-0" style="height:15px !important;">Accum. price change</p>\
+                                                    <p class="m-0" style="height:15px !important;">Change per second</p></td>\
+                                                <td class="p-0">\
+                                                    <p class="m-0" style="height:15px !important;width:'+parseFloat(e.P)+'% !important;background:green;"></p>\
+                                                    <p class="m-0" style="height:15px !important;width:'+parseFloat(cps)+'% !important;background:blue;"></p>\
+                                                </td>\
+                                            </tr>';
+                                        $('#positive-tokens').append(html);
+                                    }
+                                } 
+                                if (e.P !== "" && Math.sign(change) === -1) {
+                                    if (parseFloat(e.P) > parseFloat(min_avg_cps2)) {
+                                        var cps = (change / 2.5);
+                                        html2 += '<tr id="symbol-'+symbol+'" data-symbol="'+symbol+'" class="symbols border-bottom border-secondary">\
+                                                <td></td>\
+                                                <td class="text-center">\
+                                                    <b>\
+                                                    <a target="_blank" style="width:150px !important;" href="https://www.binance.com/en/trade/'+symbol+'?type=spot">'+symbol+'</a>\
+                                                    </b>\
+                                                </td>\
+                                                <td class="text-center" id="symbol-'+symbol+'-price">'+e.c+'</td>\
+                                                <td style="text-align:left !important;" class="text-center">'+e.P+'</td>\
+                                                <td>\
+                                                    <p class="m-0" style="height:15px !important;">Accum. price change</p>\
+                                                    <p class="m-0" style="height:15px !important;">Change per second</p></td>\
+                                                <td class="p-0">\
+                                                    <p class="m-0" style="height:15px !important;width:'+Math.abs(e.P)+'% !important;background:red;"></p>\
+                                                    <p class="m-0" style="height:15px !important;width:'+Math.abs(cps)+'% !important;background:blue;"></p>\
+                                                </td>\
+                                            </tr>';
+                                        
+                                        $('#negative-tokens').append(html2);
+                                    }
+                                }
+                            }, 10);
+
+                            setTimeout(function(){
+                                $('.sort').trigger('click');
+                            }, 100);
+                        }
+
+                        
+                    }
+                });
+                $('.feed-status').html('receiving token feeds ('+data.length+'/s)...');
+            }
+        };
+
+        $(document).on('click', '#start', function(e){
             e.preventDefault();
-            $('#start').html('Processing, please wait...');
-            $('#start').attr('disabled', true);
-            var symbol = $('#symbol-filter').val();
+            $('#status').val('start');
+        });
+
+        var interval;
+
+        $(document).on('submit', '#form2', function(e){
+            clearInterval(interval);
+
+            e.preventDefault();
+            $('#search').html('Processing...');
+            $('#search').attr('disabled', true);
+            var symbol = $('select[name="symbol"]').val();
             $('#symbol').val(symbol);
-            list(symbol, true);
+            $.ajax({
+                url:'{{route("coins-list2")}}',
+                method:'GET',
+                data:{
+                    symbol:symbol
+                },
+                success:function(response){
+                    $('#list-container').html(response);
+                    $('#search').html('SEARCH');
+                    $('#search').attr('disabled', false);
+                    $('#start').trigger('click');
+                    $('#time-elapsed').val(0);
+                }, error:function(response){
+                    alert("An error occurred. Re-submit request.");
+                    $('#search').html('SEARCH');
+                    $('#search').attr('disabled', false);
+                }
+            });
+        });
+
+        $(document).on('click', '#start', function(){
+            $('#status').val('start');
+            $('#start').html('START');
+            $('#start').addClass('btn-success').removeClass('btn-warning');
+            $('.elapsed').removeClass('d-none');
+            startTime = new Date();
+            var time_per_block = (parseFloat($('.time_per_block').val()) + 1);
+
+            interval = setInterval(function () {
+                var time_elapsed = $('#time-elapsed').val();
+                var time = new Date((new Date()) - startTime);
+                var seconds = time.getSeconds();
+                var minutes = time.getMinutes();
+
+                if (seconds.toString().length > 1) {
+                    seconds = seconds;
+                } else {
+                    seconds = '0'+seconds;
+                }
+
+                if (minutes.toString().length > 1) {
+                    minutes = minutes;
+                } else {
+                    minutes = '0'+minutes;
+                }
+
+                var elapsed = minutes +':'+ seconds;
+                $('#elapsed').html(elapsed);
+
+                time_elapsed = (parseInt(time_elapsed) + 1);
+                $('#time-elapsed').val(time_elapsed);
+
+                if (parseInt((time_elapsed)) == parseInt(time_per_block)) {
+                    $('#time-elapsed').val(1);
+                }
+            }, 1000);
         });
 
         $(document).on('click', '#toggle-settings', function(){
             var panel = $('#settings-form');
             var panel2 = $('#form2');
+            var nav = $('.navbar .container');
 
             if (panel.hasClass('d-none')) {
                 panel.removeClass('d-none');
@@ -259,6 +484,12 @@ function list(symbol, list)
                 panel2.removeClass('d-none');
             } else {
                 panel2.addClass('d-none');
+            }
+
+            if (nav.hasClass('d-none')) {
+                nav.removeClass('d-none');
+            } else {
+                nav.addClass('d-none');
             }
         });
 
@@ -280,29 +511,6 @@ function list(symbol, list)
                     alert('Settings successfully saved.');
                 }
             });
-        });
-
-        var interval;
-        $(document).on('click', '#trigger-live', function(){
-            var screenRefresh = $('#screen-refresh').val();
-            interval = setInterval(function(){
-                list($('#symbol').val(), false);
-                $('#list-header').addClass('text-success');
-            }, screenRefresh);
-        });
-
-        $(document).on('click', '#stop', function(){
-            clearInterval(interval);
-            $('#list-header').removeClass('text-success');
-            $('#start').addClass('d-none');
-            $('#resume').removeClass('d-none');
-        });
-
-        $(document).on('click', '#resume', function(){
-            list($('#symbol').val(), false);
-            $('#trigger-live').trigger('click');
-            $('#start').removeClass('d-none');
-            $('#resume').addClass('d-none');
         });
     });
 </script>

@@ -51,17 +51,12 @@
                 var table = $(this).parents("table");
                 var rows = $(this).parents("table").find("tbody tr").toArray().sort(TableComparer($(this).index()));
                 
-                // if ($(this).hasClass('sort-by-rank')) {
-                //     var dir = $('.sort').data('sort');
-                // } else {
-                //     var dir = ($(this).hasClass("sort-asc")) ? "desc" : "asc";
-                // }
-
-                var auto_sort = $('.auto_sort').val();
-                if (auto_sort == 'yes') {
-                    var sort_type = $('.sort_type').val();
-                    var dir = sort_type;
+                if ($(this).hasClass('sort')) {
+                    var dir = $('.sort').data('sort');
+                } else {
+                    var dir = ($(this).hasClass("sort-asc")) ? "desc" : "asc";
                 }
+
 
                 if (dir == "desc") {
                     rows = rows.reverse();
@@ -79,7 +74,7 @@
 </head>
 <style>
     th:hover{
-        background:#aaa;
+        background:transparent;
     }
     th{
         text-align:center;
@@ -123,7 +118,7 @@
     }
 
     .symbols-body tr td{
-        font-size:20px !important;
+        font-size:10px !important;
     }
 </style>
 <body>
