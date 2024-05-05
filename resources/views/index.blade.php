@@ -127,13 +127,12 @@
                             <button type="submit" class="btn btn-primary w-100 h-100 text-sm rounded-1" id="search">SEARCH</button>
                             <button type="button" class="btn btn-primary w-100 h-100 text-sm rounded-1 d-none" id="start">START</button>
                         </div>
-                        <div class="col-sm-2 custom d-none">
-                            <select class="custom-symbols h-25 w-100" name="custom-symbol" id="custom-symbol">
+                        <div class="col-sm-2 custom">
+                            <select class="custom-symbols h-25" name="custom-symbol" id="custom-symbol">
                                 @foreach($symbols as $symbol)
                                     <option value="{{ $symbol['symbol'] }}">{{ $symbol['symbol'] }}</option>
                                 @endforeach
                             </select>
-                            
                             <button type="button" class="btn btn-success add-custom-symbol p-0 px-2">+</button>
                         </div>
                         <div class="col-sm-3 border border-secondary elapsed d-none rounded-1">
@@ -143,7 +142,7 @@
                         </div>
             </form>
         </div>
-        <div class="row p-0 my-1 custom-tokens d-none" id="custom-symbols">
+        <div class="row p-0 my-1 custom-tokens" id="custom-symbols">
             <input type="hidden" id="choice" class="border border-0" readonly>
                 <div class="col-sm-2">&bull; <span id="btc-label"></span><span id="btc"></span></div>
                 <div class="col-sm-2">&bull; <span id="eth-label"></span><span id="eth"></span></div> 
@@ -153,6 +152,11 @@
                         <div class="col-sm-2"><span class="remove-custom" style="cursor:pointer;" data-symbol="{{ $custom['symbol'] }}" id="custom{{ $custom['symbol'] }}">&bull; <span id="custom-symbol-{{ $custom['symbol'] }}">{{ $custom['symbol'] }} $</span><span id="custom-{{ $custom['symbol'] }}"></span></span></div>
                     @endforeach
                 @endif
+        </div>
+        <div class="alert alert-warning restart mt-1 p-1 d-none">
+            <center>
+                <b>Restarting...</b>
+            </center>
         </div>
         <div class="row">
             <div class="col-sm-6">
@@ -237,7 +241,7 @@ function priceFilter()
 }
 
     $(function(){
-
+        $('.custom-symbols').select2();
         var interval, startTime, averaging, initialAveraging, finalAveraging;
         const url = "wss://stream.binance.com:9443/ws/";
         const ticker = "!ticker_1h@arr";
@@ -397,10 +401,17 @@ function priceFilter()
             $('#status').val('start');
         });
 
-        var interval;
+        var interval, restart;
 
         $(document).on('submit', '#form2', function(e){
             clearInterval(interval);
+            clearInterval(restart);
+
+            setTimeout(function(){
+                $('.restart').addClass('d-none');
+                $('#negative-tokens').html("");
+                $('#positive-tokens').html("");
+            }, 2000);
 
             e.preventDefault();
             $('#search').html('Processing...');
@@ -434,6 +445,7 @@ function priceFilter()
             $('.elapsed').removeClass('d-none');
             startTime = new Date();
             var time_per_block = (parseFloat($('.time_per_block').val()) + 1);
+            var auto_start_frequency = $('.auto_start_frequency').val();
 
             interval = setInterval(function () {
                 var time_elapsed = $('#time-elapsed').val();
@@ -463,6 +475,14 @@ function priceFilter()
                     $('#time-elapsed').val(1);
                 }
             }, 1000);
+
+            if (auto_start_frequency !== undefined) {
+                var restart_frequency = (auto_start_frequency * 1000);
+                restart = setInterval(function () {
+                    $('#form2').trigger('submit');
+                    $('.restart').removeClass('d-none');
+                }, restart_frequency);
+            }
         });
 
         $(document).on('click', '#toggle-settings', function(){
