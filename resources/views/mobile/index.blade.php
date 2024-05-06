@@ -14,6 +14,9 @@
         margin-left:-1230px;
         margin-top:300px;
     }
+    .toggle-mobile, .toggle-settings{
+        display:none;
+    }
 </style>
 <div class="container-fluid">
     <div class="col-sm-12 stickyp-0 mt-4">
