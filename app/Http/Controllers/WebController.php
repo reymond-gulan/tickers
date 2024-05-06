@@ -486,4 +486,26 @@ class WebController extends Controller
         }
         return false;
     }
+
+    public function mobile(Request $request)
+    {
+        return view('mobile.index');
+    }
+
+    public function mobileList(Request $request)
+    {
+        $data = $request->all();
+        $html = "";
+
+        $symbol = strtoupper($data['symbol']) ?? 'ALL';
+        $symbols = Symbol::when(!empty($symbol) && $symbol !== 'ALL', function($query) use ($symbol){
+                            $query->where('symbol', 'LIKE', "%{$symbol}");
+                        })
+                        ->get()
+                        ->toArray();
+        $sym = $symbol;
+
+        $html = view('mobile.list', compact('sym', 'symbols'))->render();
+        return $html;
+    }
 }

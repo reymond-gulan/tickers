@@ -120,6 +120,50 @@
     .symbols-body tr td{
         font-size:10px !important;
     }
+
+    .center-div{
+        float:left;
+    }
+    .bg-red{
+        background:red !important;
+    }
+    .negative, .positive{
+        width:50%;
+    }
+    .negative{
+        border-right:1px solid #aaa;
+        float:left;
+    }
+    .positive{
+        border-left:1px solid #aaa;
+        float:left;
+        text-align:right;
+    }
+    .negative p{
+        margin-left: auto !important; 
+        margin-right: 0 !important;
+    }
+    .negative p, .positive p{
+        height:2px !important;
+        line-height:1;
+        margin:1px 0 0 0;
+    }
+    .circle{
+        padding:5px;
+        background:red;
+    }
+    .symbol{
+       cursor:pointer; 
+    }
+    .badge{
+        font-size:30px;
+    }
+    .badge-negative{
+        margin-right:-5px !important;
+        padding:5px !important;
+        border-radius:50% !important;
+        border:1px solid red !important;
+    }
 </style>
 <body>
 <button type="button" class="btn btn-secondary toggle-settings px-3" id="toggle-settings">

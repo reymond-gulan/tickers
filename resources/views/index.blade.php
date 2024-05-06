@@ -142,7 +142,7 @@
                         </div>
             </form>
         </div>
-        <div class="row p-0 my-1 custom-tokens" id="custom-symbols">
+        <div class="row p-0 my-1 custom-tokens d-none" id="custom-symbols">
             <input type="hidden" id="choice" class="border border-0" readonly>
                 <div class="col-sm-2">&bull; <span id="btc-label"></span><span id="btc"></span></div>
                 <div class="col-sm-2">&bull; <span id="eth-label"></span><span id="eth"></span></div> 
