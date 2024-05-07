@@ -176,9 +176,9 @@
 <button type="button" class="btn btn-secondary toggle-settings px-3" id="toggle-settings">
     ...
 </button>
-<a href="/m" target="_blank" type="button" class="btn btn-primary toggle-mobile px-3" id="toggle-mobile">
+<!-- <a href="/m" target="_blank" type="button" class="btn btn-primary toggle-mobile px-3" id="toggle-mobile">
     m
-</a>
+</a> -->
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm text-sm p-0 d-none">
             <div class="container">

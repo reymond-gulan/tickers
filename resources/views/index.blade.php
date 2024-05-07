@@ -6,94 +6,144 @@
             <form action="{{ route('save-settings') }}" method="POST" id="settings-form">
                 @csrf
                 <div class="row">
-                    <div class="col-sm-6 p-2" style="background:#FBC6B1;">
+                    <div class="col-sm-1 pt-2 text-sm" style="background:#FBC6B1;">
+                        <center><b>Global Settings:</b></center>
+                    </div>
+                    <div class="col-sm-4 bg-info">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <th class="p-0 text-right col-sm-4">TIME PER BLOCK (seconds):&nbsp;</th>
+                                <th class="p-0 text-right col-sm-6 text-sm">Time per sampling block (seconds):&nbsp;</th>
                                 <td>
                                     <input type="number" class="form border border-dark time_per_block" name="time_per_block">
                                 </td>
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-6 p-2" style="background:#FBC6B1;">
+                    <div class="col-sm-3 bg-info">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <th class="p-0 text-right col-sm-4">AUTO RESTART FREQUENCY (seconds):&nbsp;</th>
-                                <td>
-                                    <input type="number" class="form border border-dark auto_start_frequency" name="auto_start_frequency">
+                                <th class="p-0 text-right col-sm-4">System on/off:&nbsp;</th>
+                                <td class="col-sm-4">
+                                    <button type="button" class="btn btn-success p-0 text-sm w-100" id="start-now">Start</button>
+                                    <button type="button" class="btn btn-success p-0 text-sm w-100 d-none" id="start">Start</button>
+                                </td>
+                                <td class="col-sm-4">
+                                    <button type="button" class="btn bg-red p-0 text-sm w-100" id="stop">Stop</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-sm-2 bg-info">
+                            <table class="w-100 bg-transparent">
+                                <tr>
+                                    <th class="p-0 text-right col-sm-6">Manual data reset:&nbsp;</th>
+                                    <td>
+                                        <button type="button" class="btn btn-success p-0 text-sm w-100" id="reset">Reset data feed</button>
+                                    </td>
+                                </tr>
+                            </table>
+                    </div>
+                    <div class="col-sm-2 bg-info">
+                        <table class="w-100 bg-transparent">
+                            <tr>
+                                <td class="text-white">
+                                    <div class="row">
+                                    <input type="hidden" id="status" readonly>
+                                    <input type="hidden" id="time-elapsed" value="0" readonly>
+                                    <input type="hidden" id="time-elapsed-negative" value="0" readonly>
+                                    <button type="submit" class="btn btn-success h-100 text-sm rounded-0" id="save-settings">SAVE SETTINGS</button>
+                                    </div>
                                 </td>
                             </tr>
                         </table>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-4 p-2" style="background:#8cd98c">
+                    <div class="col-sm-5 p-2" style="background:#8cd98c">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <th colspan="2" class="p-0 text-right">Minimum Average Change per second (+) :&nbsp;</th>
-                                <td colspan="2" class="w-50">
-                                    <input type="text" class="form border border-dark min_avg_cps" name="min_avg_cps">
+                                <th class="p-0 text-right">Price Filter:&nbsp;</th>
+                                <td>
+                                    <select class="form border border-dark price_filter_type_positive" name="price_filter_type_positive">
+                                        <option value="above">above</option>
+                                        <option value="below">below</option>
+                                    </select>
                                 </td>
-                            </tr>
-                            <tr>
-                                <th class="p-0 text-right">Purity Requirement :&nbsp;</th>
-                                <td class="w-25">
-                                    <input type="number" class="form border border-dark purity_requirement" name="purity_requirement">
+                                <td style="width:10%;">
+                                    <input type="text" class="form border border-dark price_filter_positive" name="price_filter_positive">
                                 </td>
-                                <th class="p-0 text-right">Sort by :&nbsp;</th>
-                                <td class="w-25">
-                                    <select type="text" class="form symbol border border-dark sort_by_positive" name="sort_by_positive">
-                                        <option value="cps" selected>CPS</option>
-                                        <option value="price_change">Price Change</option>
-                                        <option value="price">Price</option>
+                                <th class="p-0 text-right">Symbol Sorting:&nbsp;</th>
+                                <td>
+                                    <select class="form border border-dark symbol_sorting_positive" name="symbol_sorting_positive">
+                                        <option value="asc">A-Z</option>
+                                        <option value="desc">Z-A</option>
+                                    </select>
+                                </td>
+                                <th class="p-0 text-right">CPS:&nbsp;</th>
+                                <td>
+                                    <select class="form border border-dark cps_sorting_positive" name="cps_sorting_positive">
+                                        <option value="asc">ascending</option>
+                                        <option value="desc">descending</option>
                                     </select>
                                 </td>
                             </tr>
                         </table>
-                    </div>
-                    <div class="col-sm-4 p-2" style="background:#ff8080">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <th colspan="2" class="p-0 text-right">Minimum Average Change per second (-) :&nbsp;</th>
-                                <td colspan="2" class="w-50">
-                                    <input type="text" class="form border border-dark min_avg_cps2" name="min_avg_cps2">
+                                <th class="p-0 text-right">Time:&nbsp;</th>
+                                <td>
+                                    <input type="text" class="form border border-dark averaging_time_positive" name="averaging_time_positive">
                                 </td>
-                            </tr>
-                            <tr>
-                                <th class="p-0 text-right">Minimum 2-min drop :&nbsp;</th>
-                                <td class="w-25">
-                                    <input type="number" class="form border border-dark min_2_min_drop" name="min_2_min_drop">
-                                </td>
-                                <th class="p-0 text-right">Sort by :&nbsp;</th>
-                                <td class="w-25">
-                                    <select type="text" class="form symbol border border-dark sort_by_negative" name="sort_by_negative">
-                                        <option value="cps" selected>CPS</option>
-                                        <option value="price_change">Price Change</option>
-                                        <option value="biggest_drop">Biggest Drop</option>
-                                    </select>
+                                <th class="p-0 text-right">Minimum Gain:&nbsp;</th>
+                                <td>
+                                    <input type="text" class="form border border-dark minimum_gain_positive" name="minimum_gain_positive">
                                 </td>
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-4 p-2" style="background:#ccc">
+                    <div class="col-sm-2 bg-info p-0">
+                        <div class="border border-secondary elapsed d-none rounded-1">
+                            <center>Time Elapsed<br /> <span class="badge badge-secondary" id="elapsed"></span></center>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 p-2" style="background:#ff8080">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <th class="p-0 text-right text-white col-sm-3">Sort by :&nbsp;</th>
-                                <td class="w-75">
-                                    <select type="text" class="form symbol border border-dark sort_by_zero" name="sort_by_zero">
-                                        <option value="cps" selected>CPS</option>
-                                        <option value="price_change">Price Change</option>
+                                <th class="p-0 text-right">Price Filter:&nbsp;</th>
+                                <td>
+                                    <select class="form border border-dark price_filter_type_negative" name="price_filter_type_negative">
+                                        <option value="above">above</option>
+                                        <option value="below">below</option>
+                                    </select>
+                                </td>
+                                <td style="width:10%;">
+                                    <input type="text" class="form border border-dark price_filter_negative" name="price_filter_negative">
+                                </td>
+                                <th class="p-0 text-right">Symbol Sorting:&nbsp;</th>
+                                <td>
+                                    <select class="form border border-dark symbol_sorting_negative" name="symbol_sorting_negative">
+                                        <option value="asc">A-Z</option>
+                                        <option value="desc">Z-A</option>
+                                    </select>
+                                </td>
+                                <th class="p-0 text-right">CPS:&nbsp;</th>
+                                <td>
+                                    <select class="form border border-dark cps_sorting_negative" name="cps_sorting_negative">
+                                        <option value="asc">ascending</option>
+                                        <option value="desc">descending</option>
                                     </select>
                                 </td>
                             </tr>
+                        </table>
+                        <table class="w-100 bg-transparent">
                             <tr>
-                                <td colspan="2" class="text-white px-2">
-                                    <div class="row">
-                                    <input type="hidden" id="status" readonly>
-                                    <input type="hidden" id="time-elapsed" value="0" readonly>
-                                    <button type="submit" class="btn btn-success h-100 text-sm rounded-0" id="save-settings">SAVE SETTINGS</button>
-                                    </div>
+                                <th class="p-0 text-right">Time:&nbsp;</th>
+                                <td>
+                                    <input type="text" class="form border border-dark averaging_time_negative" name="averaging_time_negative">
+                                </td>
+                                <th class="p-0 text-right">Minimum Gain:&nbsp;</th>
+                                <td>
+                                    <input type="text" class="form border border-dark minimum_gain_negative" name="minimum_gain_negative">
                                 </td>
                             </tr>
                         </table>
@@ -103,44 +153,28 @@
             <form action="{{ route('calculate') }}" method="POST" id="form2">
                 @csrf
                 <div class="row p-1 alert alert-success my-0">
-                        <div class="col-sm-1 p-0">
-                            <select type="text" class="form symbol border border-dark h-25" name="symbol" id="symbol-filter">
-                                <option value="USDT" selected>USDT</option>
-                                <option value="BTC">BTC</option>
-                                <option value="SOL">SOL</option>
-                                <option value="BNB">BNB</option>
-                                <option value="TUSD">TUSD</option>
-                                <option value="ALL">ALL</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-1 p-0">
-                            <select type="text" class="form price_type border border-dark h-25" name="price_type" id="price_type">
-                                <option value="all">ALL</option>
-                                <option value="above">ABOVE</option>
-                                <option value="below">BELOW</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-1 p-0">
-                            <input type="text" class="form price_filter border border-dark h-25" name="price_filter" id="price_filter" placeholder="PRICE FILTER">
-                        </div>
-                        <div class="col-sm-2 px-1">
-                            <button type="submit" class="btn btn-primary w-100 h-100 text-sm rounded-1" id="search">SEARCH</button>
-                            <button type="button" class="btn btn-primary w-100 h-100 text-sm rounded-1 d-none" id="start">START</button>
-                        </div>
-                        <div class="col-sm-2 custom">
-                            <select class="custom-symbols h-25" name="custom-symbol" id="custom-symbol">
-                                @foreach($symbols as $symbol)
-                                    <option value="{{ $symbol['symbol'] }}">{{ $symbol['symbol'] }}</option>
-                                @endforeach
-                            </select>
-                            <button type="button" class="btn btn-success add-custom-symbol p-0 px-2">+</button>
-                        </div>
-                        <div class="col-sm-3 border border-secondary elapsed d-none rounded-1">
-                            <center>
-                            Time Elapsed <span class="badge badge-success bg-success" id="elapsed"></span>
-                            </center>
-                        </div>
-            </form>
+                    <div class="col-sm-1 p-0">
+                        <select type="text" class="form symbol border border-dark h-25" name="symbol" id="symbol-filter">
+                            <option value="USDT" selected>USDT</option>
+                            <option value="BTC">BTC</option>
+                            <option value="SOL">SOL</option>
+                            <option value="BNB">BNB</option>
+                            <option value="TUSD">TUSD</option>
+                            <option value="ALL">ALL</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2 px-1 d-none">
+                        <button type="submit" class="btn btn-primary w-100 h-100 text-sm rounded-1" id="search">SEARCH</button>
+                    </div>
+                    <div class="col-sm-2 custom">
+                        <select class="custom-symbols h-25" name="custom-symbol" id="custom-symbol">
+                            @foreach($symbols as $symbol)
+                                <option value="{{ $symbol['symbol'] }}">{{ $symbol['symbol'] }}</option>
+                            @endforeach
+                        </select>
+                        <button type="button" class="btn btn-success add-custom-symbol p-0 px-2">+</button>
+                    </div>
+                </form>
         </div>
         <div class="row p-0 my-1 custom-tokens d-none" id="custom-symbols">
             <input type="hidden" id="choice" class="border border-0" readonly>
@@ -165,7 +199,7 @@
                         <tr id="list-header" class="border-bottom border-secondary">
                             <th style="width:50px !important;">SYMBOL</th>
                             <th style="width:80px !important;">CURRENT PRICE</th>
-                            <th class="sort" data-sort="desc" style="text-align:left !important;width:50px !important;"></th>
+                            <th class="sort" style="text-align:left !important;width:50px !important;"></th>
                             <th style="width:100px !important;"></th>
                             <th></th>
                         </tr>
@@ -180,7 +214,7 @@
                         <tr id="list-header" class="border-bottom border-secondary">
                             <th style="width:50px !important;">SYMBOL</th>
                             <th style="width:80px !important;">CURRENT PRICE</th>
-                            <th class="sort" data-sort="desc" style="text-align:left !important;width:50px !important;"></th>
+                            <th class="sort-negative" style="text-align:left !important;width:50px !important;"></th>
                             <th style="width:100px !important;"></th>
                             <th></th>
                         </tr>
@@ -254,13 +288,20 @@ function priceFilter()
             var data = JSON.parse(event.data);
             var status = $('#status').val();
             var time_elapsed = $('#time-elapsed').val();
-            var time_per_block = $('.time_per_block').val();
-
-            var price_type = $('#price_type').val();
-            var price_filter = $('#price_filter').val();
-            var symbol_filter = $('#symbol-filter').val();
+            var time_elapsed_negative = $('#time-elapsed-negative').val();
 
             if (status == 'start') {
+                var averaging_time_positive = $('.averaging_time_positive').val();
+                var averaging_time_negative = $('.averaging_time_negative').val();
+
+                var price_filter_type_positive = $('.price_filter_type_positive').val();
+                var price_filter_type_negative = $('.price_filter_type_negative').val();
+
+                var price_filter_positive = $('.price_filter_positive').val();
+                var price_filter_negative = $('.price_filter_negative').val();
+
+                var symbol_filter = $('#symbol-filter').val();
+
                 $('.custom-tokens').removeClass('d-none');
                 $.each(data, function(i, e){
                     var collection_status = $('#collection_status').val();
@@ -317,29 +358,26 @@ function priceFilter()
                     }
 
 
-                    if (parseInt(time_elapsed) == parseInt(time_per_block)) {
+                    if (parseInt(time_elapsed) == parseInt(averaging_time_positive)) {
+
+                        var cps_sorting_positive = $('.cps_sorting_positive').val();
+                        $('.sort').attr('data-sort', cps_sorting_positive);
 
                         $('#positive-tokens').html("");
-                        $('#negative-tokens').html("");
                         $('#symbol-'+e.s+'-current-price').html(e.c);
                         $('#symbol-'+e.s+'-price-change-percent').html(e.P);
-
                         
-                        var min_avg_cps = parseFloat($('.min_avg_cps').val());
-                        var min_avg_cps2 = $('.min_avg_cps2').val();
+                        var minimum_gain_positive = parseFloat($('.minimum_gain_positive').val());
 
                         var symbol = e.s;
                         var change = parseFloat(e.P);
                         var html = '';
-                        var html2 = '';
-
                         var hasString = symbol.indexOf(symbol_filter);
 
                         if (hasString > 0) {
                             setTimeout(function(){
                                 if (e.P !== "" && Math.sign(change) === 1) {
-                                    if (change > min_avg_cps) {
-                                        var cps = (change / 2.5);
+                                    if (change > minimum_gain_positive) {
                                         html += '<tr class="border-bottom border-secondary symbols" data-symbol="'+symbol+'" id="symbol-'+symbol+'">\
                                                 <td class="text-center">\
                                                     <b>\
@@ -348,20 +386,56 @@ function priceFilter()
                                                 </td>\
                                                 <td class="text-center" id="symbol-'+symbol+'-price">'+e.c+'</td>\
                                                 <td style="text-align:left !important;" class="text-center">'+e.P+'</td>\
-                                                <td>\
-                                                    <p class="m-0" style="height:15px !important;">Accum. price change</p>\
-                                                    <p class="m-0" style="height:15px !important;">Change per second</p></td>\
                                                 <td class="p-0">\
-                                                    <p class="m-0" style="height:15px !important;width:'+parseFloat(e.P)+'% !important;background:green;"></p>\
-                                                    <p class="m-0" style="height:15px !important;width:'+parseFloat(cps)+'% !important;background:blue;"></p>\
+                                                    <p class="m-0" style="height:15px !important;width:'+(parseFloat(e.P) * 10)+'% !important;background:green;max-width:100%;"></p>\
                                                 </td>\
                                             </tr>';
                                         $('#positive-tokens').append(html);
                                     }
-                                } 
+                                }
+                            }, 10);
+
+                            setTimeout(function(){
+                                if (price_filter_positive !== '') {
+                                    if (price_filter_type_positive == 'above') {
+                                        if (parseFloat(e.c) < parseFloat(price_filter_positive)) {
+                                            $('#positive-tokens #symbol-'+symbol).addClass('bg-danger');
+                                        }
+                                    } else {
+                                        if (parseFloat(e.c) > parseFloat(price_filter_positive)) {
+                                            $('#positive-tokens #symbol-'+symbol).addClass('bg-danger');
+                                        }
+                                    }
+                                }
+                            }, 100);
+
+                            setTimeout(function(){
+                                $('.sort').trigger('click');
+                            }, 100);
+                        }
+
+                        
+                    }
+
+                    if (parseInt(time_elapsed_negative) == parseInt(averaging_time_negative)) {
+                        var cps_sorting_negative = $('.cps_sorting_negative').val();
+                        $('.sort-negative').attr('data-sort', cps_sorting_negative);
+
+                        $('#negative-tokens').html("");
+                        $('#symbol-'+e.s+'-current-price').html(e.c);
+                        $('#symbol-'+e.s+'-price-change-percent').html(e.P);;
+                        var minimum_gain_negative = $('.minimum_gain_negative').val();
+
+                        var symbol = e.s;
+                        var change = parseFloat(e.P);
+                        var html2 = '';
+
+                        var hasString = symbol.indexOf(symbol_filter);
+
+                        if (hasString > 0) {
+                            setTimeout(function(){
                                 if (e.P !== "" && Math.sign(change) === -1) {
-                                    if (parseFloat(e.P) > parseFloat(min_avg_cps2)) {
-                                        var cps = (change / 2.5);
+                                    if (parseFloat(e.P) > parseFloat(minimum_gain_negative)) {
                                         html2 += '<tr id="symbol-'+symbol+'" data-symbol="'+symbol+'" class="symbols border-bottom border-secondary">\
                                                 <td class="text-center">\
                                                     <b>\
@@ -370,12 +444,8 @@ function priceFilter()
                                                 </td>\
                                                 <td class="text-center" id="symbol-'+symbol+'-price">'+e.c+'</td>\
                                                 <td style="text-align:left !important;" class="text-center">'+e.P+'</td>\
-                                                <td>\
-                                                    <p class="m-0" style="height:15px !important;">Accum. price change</p>\
-                                                    <p class="m-0" style="height:15px !important;">Change per second</p></td>\
                                                 <td class="p-0">\
-                                                    <p class="m-0" style="height:15px !important;width:'+Math.abs(e.P)+'% !important;background:red;"></p>\
-                                                    <p class="m-0" style="height:15px !important;width:'+Math.abs(cps)+'% !important;background:blue;"></p>\
+                                                    <p class="m-0" style="height:15px !important;width:'+(Math.abs(e.P) + 10)+'% !important;background:red;max-width:100%;"></p>\
                                                 </td>\
                                             </tr>';
                                         
@@ -385,27 +455,48 @@ function priceFilter()
                             }, 10);
 
                             setTimeout(function(){
-                                $('.sort').trigger('click');
+                                if (price_filter_negative !== '') {
+                                    if (price_filter_type_negative == 'above') {
+                                        if (parseFloat(e.c) < parseFloat(price_filter_negative)) {
+                                            $('#negative-tokens #symbol-'+symbol).addClass('bg-danger');
+                                        }
+                                    } else {
+                                        if (parseFloat(e.c) > parseFloat(price_filter_negative)) {
+                                            $('#negative-tokens #symbol-'+symbol).addClass('bg-danger');
+                                        }
+                                    }
+                                }
+                            }, 100);
+
+                            setTimeout(function(){
+                                $('.sort-negative').trigger('click');
                             }, 100);
                         }
 
-                        
-                    }
+
+                        }
                 });
                 $('.feed-status').html('receiving token feeds ('+data.length+'/s)...');
             }
         };
 
-        $(document).on('click', '#start', function(e){
+        $(document).on('click', '#start-now', function(e){
             e.preventDefault();
-            $('#status').val('start');
+            $('#form2').trigger('submit');
         });
 
-        var interval, restart;
+        var interval;
+
+        $(document).on('click', '#stop', function(){
+            clearInterval(interval);
+        });
+
+        $(document).on('click', '#reset', function(){
+            $('#form2').trigger('submit');
+        });
 
         $(document).on('submit', '#form2', function(e){
             clearInterval(interval);
-            clearInterval(restart);
 
             setTimeout(function(){
                 $('.restart').addClass('d-none');
@@ -430,6 +521,7 @@ function priceFilter()
                     $('#search').attr('disabled', false);
                     $('#start').trigger('click');
                     $('#time-elapsed').val(0);
+                    $('#time-elapsed-negative').val(0);
                 }, error:function(response){
                     alert("An error occurred. Re-submit request.");
                     $('#search').html('SEARCH');
@@ -443,12 +535,14 @@ function priceFilter()
             $('#start').html('START');
             $('#start').addClass('btn-success').removeClass('btn-warning');
             $('.elapsed').removeClass('d-none');
+
             startTime = new Date();
-            var time_per_block = (parseFloat($('.time_per_block').val()) + 1);
-            var auto_start_frequency = $('.auto_start_frequency').val();
+            var averaging_time_positive = (parseFloat($('.averaging_time_positive').val()) + 1);
+            var averaging_time_negative = (parseFloat($('.averaging_time_negative').val()) + 1);
 
             interval = setInterval(function () {
                 var time_elapsed = $('#time-elapsed').val();
+                var time_elapsed_negative = $('#time-elapsed-negative').val();
                 var time = new Date((new Date()) - startTime);
                 var seconds = time.getSeconds();
                 var minutes = time.getMinutes();
@@ -469,20 +563,18 @@ function priceFilter()
                 $('#elapsed').html(elapsed);
 
                 time_elapsed = (parseInt(time_elapsed) + 1);
+                time_elapsed_negative = (parseInt(time_elapsed_negative) + 1);
                 $('#time-elapsed').val(time_elapsed);
+                $('#time-elapsed-negative').val(time_elapsed_negative);
 
-                if (parseInt((time_elapsed)) == parseInt(time_per_block)) {
+                if (parseInt((time_elapsed)) == parseInt(averaging_time_positive)) {
                     $('#time-elapsed').val(1);
                 }
-            }, 1000);
 
-            if (auto_start_frequency !== undefined) {
-                var restart_frequency = (auto_start_frequency * 1000);
-                restart = setInterval(function () {
-                    $('#form2').trigger('submit');
-                    $('.restart').removeClass('d-none');
-                }, restart_frequency);
-            }
+                if (parseInt((time_elapsed_negative)) == parseInt(averaging_time_negative)) {
+                    $('#time-elapsed-negative').val(1);
+                }
+            }, 1000);
         });
 
         $(document).on('click', '#toggle-settings', function(){
