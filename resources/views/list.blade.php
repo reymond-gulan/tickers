@@ -30,7 +30,7 @@
             @php
                 $symbol = $symbol['symbol'];
             @endphp
-            <tr data-symbol="{{ $symbol }}" id="symbol-{{ $symbol }}" class="symbols border-bottom border-dark">
+            <tr data-symbol="{{ $symbol }}" id="symbol-{{ $symbol }}" class="symbols border-bottom-2">
                 <td class="text-center" id="symbol-{{ $symbol }}-ranking" class="ranking"></td>
                 <td class="text-center">
                     <b>

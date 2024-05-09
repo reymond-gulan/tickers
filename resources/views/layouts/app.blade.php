@@ -171,7 +171,10 @@
         border-radius:50% !important;
         border:1px solid red !important;
     }
-</style>
+    .border-bottom-2{
+        border-bottom:2px solid #000 !important;
+    }
+    </style>
 <body>
 <button type="button" class="btn btn-secondary toggle-settings px-3" id="toggle-settings">
     ...
