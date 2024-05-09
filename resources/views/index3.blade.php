@@ -57,8 +57,7 @@
                                 <th>Sort by:</th>
                                 <td>
                                 <select class="form border border-dark sort_by" name="sort_by">
-                                        <option value="sym">SYMBOL</option>
-                                        <option value="change_percent">PRICE GAIN</option>
+                                        <option value="change_percent" selected>PRICE GAIN</option>
                                         <option value="change_per_second">CHANGE PER SECOND</option>
                                     </select>
                                 </td>
@@ -135,7 +134,7 @@
                             </select>
                         </div>
                         <div class="col-sm-1 p-0">
-                            <input type="text" class="form price_filter border border-dark h-25" name="price_filter" id="price_filter" placeholder="PRICE FILTER">
+                            <input type="number" class="form price_filter border border-dark h-25" name="price_filter" id="price_filter" placeholder="PRICE FILTER">
                         </div>
                         <div class="col-sm-1 p-0 px-2 d-none">
                             <input type="text" class="form text-sm symbol border border-dark" id="symbol" readonly>
@@ -258,7 +257,7 @@ function volumePercentage()
             }
         }
 
-        $('#symbol-'+symbol+'-volume-average').html(qvps);
+        // $('#symbol-'+symbol+'-volume-average').html(qvps);
 
         if (length < 1 && perpetual !== 'start') {
             // Final iteration, check if any token is qualified...
@@ -359,7 +358,7 @@ function getAverage(symbol, initial, target)
     
 
     var container = $('#symbol-'+symbol+'-live-price');
-    var liveAveragingTime = $('.live_averaging_time').val();
+    var liveAveragingTime = $('.requalifying').val();
     var result = $(container).val().split(',');
     var count = 0;
     var value = 0;
@@ -470,26 +469,25 @@ function getAverage(symbol, initial, target)
     }
 
     $('#symbol-'+symbol+'-latest-price').html(increase);
-    $('#symbol-'+symbol+'-change').html(c);
-    $('#symbol-'+symbol+'-change-percentage').html(cp);
+    // $('#symbol-'+symbol+'-change').html(c);
+    // $('#symbol-'+symbol+'-change-percentage').html(cp);
     $('#symbol-'+symbol+'-change-per-second').html(cps);
 
-    var price_change_percentage = $('#symbol-'+symbol+'-price-change-percentage').html();
-
-    if (price_change_percentage !== "") {
-        $('#symbol-'+symbol+'-price-change-percent').html(price_change_percentage);
-    }
     var html = "";
 
-    if (price_change_percentage !== "" && Math.sign(price_change_percentage) === 1) {
-        html += '<p class="m-0" style="height:15px !important;width:'+(parseFloat(price_change_percentage) * 2)+'% !important;background:green;max-width:100%;"></p>';
-    } else if (price_change_percentage !== "" && Math.sign(price_change_percentage) !== -1) {
-        html += '<p class="m-0" style="height:15px !important;width:'+(Math.abs(price_change_percentage) * 2)+'% !important;background:red;max-width:100%;"></p>';
+    var sort_by = $('.sort_by').val();
+
+    if (sort_by === 'change_per_second') {
+        console.log(sort_by);
+        if (Math.sign(cps) === 1) {
+            html += '<p class="m-0 bar" data-symbol="'+symbol+'" style="height:15px !important;cursor:pointer;width:'+(parseFloat(cps) * 10)+'% !important;background:green;max-width:100%;"></p>';
+        } else if (Math.sign(cps) === -1) {
+            html += '<p class="m-0 bar" data-symbol="'+symbol+'" style="height:15px !important;cursor:pointer;width:'+(Math.abs(cps) * 10)+'% !important;background:red;max-width:100%;"></p>';
+        }
+        $('#symbol-'+symbol+'-indicator').html(html);  
     }
 
-    
-
-    $('#symbol-'+symbol+'-indicator').html(html);
+    priceFilter();
 
     if ($('#symbol-'+symbol+'-live-price').val() !== "") {
         $('#symbol-'+symbol+'-live-price').val("");
@@ -498,20 +496,20 @@ function getAverage(symbol, initial, target)
 
 function priceFilter()
 {
-    var symbols = $('.symbols:not(".bg-danger")');
-    $.each(symbols, function(){
-        var symbol = $(this).data('symbol');
-        var price_filter = $('#price_filter').val();
-        var price_type = $('#price_type').val();
-        if (price_filter !== '') {
+    var price_filter = $('#price_filter').val();
+    if (price_filter !== '') {
+        var symbols = $('.symbols:not(".bg-danger")');
+        $.each(symbols, function(){
+            var symbol = $(this).data('symbol');
+            var price_type = $('#price_type').val();
             var price = $('#symbol-'+symbol+'-price').html();
             if (price_type == 'above' && parseFloat(price) < parseFloat(price_filter)) {
                 $('#symbol-'+symbol).addClass('bg-danger');
             } else if (price_type == 'below' && parseFloat(price) > parseFloat(price_filter)) {
                 $('#symbol-'+symbol).addClass('bg-danger');
             }
-        }
-    });
+        });
+    }
 }
 
 function addRanking()
@@ -580,16 +578,18 @@ function autoSort()
 
         var interval, startTime, averaging, initialAveraging, finalAveraging;
         const url = "wss://stream.binance.com:9443/ws/";
-        const ticker = "!ticker_1h@arr";
+        const ticker = "!ticker_1d@arr";
         const socket = new WebSocket(url + ticker);
 
         socket.addEventListener("error", (event) => {
             $('.feed-status').html("Connection cannot be established...");
         });
+        // Feeds
 
         socket.onmessage = function (event) {
             var data = JSON.parse(event.data);
             var status = $('#status').val();
+            var sort_by = $('.sort_by').val();
             if (status == 'start') {
                 $('.custom-tokens').removeClass('d-none');
                 $.each(data, function(i, e){
@@ -651,14 +651,29 @@ function autoSort()
                         // collectVolume(e.s, parseFloat(e.q)); // Quote Asset Volume
                     } else if (collection_status === 'price') {
                         collectValues(e.s, parseFloat(e.c));
+                        $('#symbol-'+e.s+'-volume-average').html(e.P);
                     }
 
                     collectVolume(e.s, parseFloat(e.v));
 
                     $('#symbol-'+e.s+'-latest').html(e.c);
+
+                    var start_price = $('#symbol-'+e.s+'-price').html();
+
+                    if (start_price !== "") {
+                        var change = (parseFloat(e.c) - parseFloat(start_price));
+                        var gain_loss = percentageIncrease(start_price, e.c);
+
+                        $('#symbol-'+e.s+'-change').html(change.toFixed(5));
+                        $('#symbol-'+e.s+'-change-percentage').html(gain_loss);
+                    }
+
+
                     var current = new Date().toLocaleString();
                     var time = current.substring(10, (new String(current).length));
                     $('#symbol-'+e.s+'-current-time').html(time.toLowerCase());
+
+
 
                     var start_time = $('#symbol-'+e.s+'-time').html();
                     var end_time = $.now();
@@ -669,6 +684,19 @@ function autoSort()
                     }
 
                     $('#symbol-'+e.s+'-price-change-percentage').html(e.P);
+
+                    if (sort_by == 'change_percent') {
+                        var change_percent = parseFloat(e.P);
+                        var change_percent = percentageIncrease(start_price, e.c);
+                        var html = "";
+                        if (change_percent !== "" && Math.sign(change_percent) === 1) {
+                            html += '<p class="m-0 bar" data-symbol="'+e.s+'" style="height:15px !important;cursor:pointer;width:'+(parseFloat(change_percent) * 2)+'% !important;background:green;max-width:100%;"></p>';
+                        } else if (change_percent !== "" && Math.sign(change_percent) === -1) {
+                            html += '<p class="m-0 bar" data-symbol="'+e.s+'" style="height:15px !important;cursor:pointer;width:'+(Math.abs(change_percent) * 2)+'% !important;background:red;max-width:100%;"></p>';
+                        }
+                        $('#symbol-'+e.s+'-indicator').html(html);
+                        $('#symbol-'+e.s+'-volume-average').html(e.P);
+                    }
                 });
 
                 $('.feed-status').html('receiving token feeds ('+data.length+'/s)...');
@@ -821,6 +849,11 @@ function autoSort()
 
                 var elapsed = minutes +':'+ seconds;
                 $('#elapsed').html(elapsed);
+
+                setTimeout(function(){
+                    addRanking();
+                }, 100);
+
             }, 1000);
             $('.sort-qvps').trigger('click');
         });
@@ -828,7 +861,7 @@ function autoSort()
         $(document).on('click', '#start-blocks', function(){
             $('#start-initial').trigger('click');
             var symbols = $('.symbols');
-            var live_averaging_time = $('.live_averaging_time').val();
+            var live_averaging_time = $('.requalifying').val();
             var duration;
             $('.qualifying_status').remove();
             // $('.qualifying_status').html($('.symbols:not(.bg-danger)').length+" token/s qualified...");
@@ -1030,7 +1063,12 @@ function autoSort()
         });
 
         $(document).on('click','#sort', function(){
-            $('.sort').trigger('click');
+            var sort_by = $('.sort_by').val();
+            if (sort_by === 'change_per_second') {
+                $('.change_per_second').trigger('click');
+            } else {
+                $('.change_percent').trigger('click');
+            }
             // addRanking();
         });
         var sticky = $('.sticky').offset().top;   
@@ -1043,6 +1081,18 @@ function autoSort()
                 $('.sticky').css({'position':'relative'});
             }
                 
+        });
+
+        $(document).on('change','#price_filter, #price_type', function(){
+            var price_filter = $('#price_filter').val();
+            if (price_filter !== "") {
+                priceFilter();
+            }
+        });
+
+        $(document).on('click','.bar', function(){
+            var symbol = $(this).data('symbol');
+            window.open('https://www.binance.com/en/trade/'+symbol+'?type=spot');
         });
     });
 </script>

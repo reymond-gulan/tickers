@@ -4,37 +4,37 @@
 <table class="w-100 bg-transparent tokens-table d-none" id="table">
     <thead style="cursor:pointer;">
         <tr id="list-header" class="border-bottom border-secondary">
-            <th></th>
-            <th class="sym">SYMBOL</th>
+            <th style="width:30px;"></th>
+            <th style="width:60px !important;" class="sym">SYMBOL</th>
             <th class="d-none"></th>
-            <th class="d-none">PRE-QUALIFYING AVERAGE</th>
-            <th class="d-none">QUALIFYING AVERAGE</th>
-            <th class="volume_change">PRICE CHANGE</th>
+            <th class="d-none">PRE-QUALIFYING <br />AVERAGE</th>
+            <th class="d-none">QUALIFYING <br />AVERAGE</th>
+            <th style="width:60px !important;" class="volume_change">PRICE <br />CHANGE</th>
             <th class="d-none"></th>
             <th class="d-none">QUALIFYING TIME</th>
             <th class="d-none">CURRENT TIME</th>
             <th class="d-none">ELAPSED (seconds)</th>
             <th class="elapsed_time d-none">ELAPSED TIME</th>
-            <th>START PRICE</th>
-            <th>LATEST PRICE</th>
-            <th class="accum_change">ACCUMULATED CHANGE</th>
-            <th class="change_percent" data-sort="desc">PRICE GAIN</th>
-            <th class="change_per_second">CHANGE per SECOND</th>
+            <th style="width:60px !important;">START<br /> PRICE</th>
+            <th style="width:60px !important;">LATEST<br /> PRICE</th>
+            <th style="width:60px !important;" class="accum_change">ACCUMULATED<br /> CHANGE</th>
+            <th style="width:60px !important;" class="change_percent">GAIN/LOSS</th>
+            <th style="width:60px !important;" class="change_per_second">CHANGE % per SECOND</th>
             <th class="d-none"></th>
-            <th class="d-none"></th>
-            <th class="sort" style="width:500px !important;"></th>
+            <th class="sort d-none"></th>
+            <th class="dummy-sort"></th>
         </tr>
     </thead>
     <tbody class="symbols-body">
-        @foreach($symbols as $symbol)
+        @foreach($symbols as $key => $symbol)
             @php
                 $symbol = $symbol['symbol'];
             @endphp
             <tr data-symbol="{{ $symbol }}" id="symbol-{{ $symbol }}" class="symbols border-bottom border-secondary">
-                <td id="symbol-{{ $symbol }}-ranking" class="ranking"></td>
+                <td class="text-center" id="symbol-{{ $symbol }}-ranking" class="ranking"></td>
                 <td class="text-center">
                     <b>
-                    <a target="_blank" style="width:150px !important;" href="https://www.binance.com/en/trade/{{ $symbol }}?type=spot">
+                    <a target="_blank" href="https://www.binance.com/en/trade/{{ $symbol }}?type=spot">
                         @if (!empty($sym) && $sym !== "ALL")
                             {{ str_replace($sym, "", $symbol) }}
                         @else

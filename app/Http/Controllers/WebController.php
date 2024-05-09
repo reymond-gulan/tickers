@@ -136,7 +136,6 @@ class WebController extends Controller
         $now = strtotime(now());
 
         $symbol = strtoupper($data['symbol']) ?? 'ALL';
-        $symbol = 'ALL';
         $symbols = Symbol::when(!empty($symbol) && $symbol !== 'ALL', function($query) use ($symbol){
                             $query->where('symbol', 'LIKE', "%{$symbol}");
                         })->get()
