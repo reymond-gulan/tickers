@@ -884,7 +884,6 @@ function autoSort()
                         }
                         getAverage(symbol, initial);
                     });
-                    priceFilter();
                 }, duration);
             }
         });
@@ -991,6 +990,7 @@ function autoSort()
 
                 var elapsed = minutes +':'+ seconds;
                 $('#elapsed').html(elapsed);
+                priceFilter();
             }, 1000);
 
             if (symbols.length > 0) {
