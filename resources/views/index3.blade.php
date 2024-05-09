@@ -852,6 +852,7 @@ function autoSort()
 
                 setTimeout(function(){
                     addRanking();
+                    priceFilter();
                 }, 100);
 
             }, 1000);
@@ -883,6 +884,7 @@ function autoSort()
                             $('#symbol-'+symbol).addClass('d-none');
                         }
                         getAverage(symbol, initial);
+                        priceFilter();
                     });
                 }, duration);
             }

@@ -3,7 +3,7 @@
 <div class="alert alert-success qualifying_status p-0 p-1 m-0 text-center" style="font-style:italic;font-weight:bold;"></div>
 <table class="w-100 bg-transparent tokens-table d-none" id="table">
     <thead style="cursor:pointer;">
-        <tr id="list-header" class="border-bottom border-dark border-2">
+        <tr id="list-header" class="border-bottom border-dark">
             <th style="width:30px;"></th>
             <th style="width:60px !important;" class="sym">SYMBOL</th>
             <th class="d-none"></th>
@@ -30,7 +30,7 @@
             @php
                 $symbol = $symbol['symbol'];
             @endphp
-            <tr data-symbol="{{ $symbol }}" id="symbol-{{ $symbol }}" class="symbols border-bottom border-dark border-1">
+            <tr data-symbol="{{ $symbol }}" id="symbol-{{ $symbol }}" class="symbols border-bottom border-dark">
                 <td class="text-center" id="symbol-{{ $symbol }}-ranking" class="ranking"></td>
                 <td class="text-center">
                     <b>
