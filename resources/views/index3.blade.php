@@ -6,71 +6,69 @@
             <form action="{{ route('save-settings') }}" method="POST" id="settings-form">
                 @csrf
                 <div class="row">
-                    <div class="col-sm-2 p-2" style="background:#FBC6B1;">
+                    <div class="col-sm-3 bg-info">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <th class="p-0 text-right">PRE-QUALIFYING&nbsp;</th>
-                                <td class="w-50">
+                                <th class="w-50 text-right">Initial Sampling (seconds):&nbsp;</th>
+                                <td>
                                     <input type="number" class="form border border-dark pre_qualifying" name="pre_qualifying">
                                 </td>
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-2 p-2" style="background:#FBC6B1;">
+                    <div class="col-sm-3 bg-info" style="background:#FBC6B1;">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <th class="p-0 text-right">QUALIFYING&nbsp;</th>
-                                <td class="w-50">
+                                <th class="w-50 text-right">Final Sampling (seconds):&nbsp;</th>
+                                <td>
                                     <input type="text" class="form border border-dark qualifying" name="qualifying">
                                 </td>
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-2 p-2" style="background:#9294C2;">
+                    <div class="col-sm-3 bg-info">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <th class="p-0 text-right">MINIMUM&nbsp;QUALIFIER&nbsp;</th>
+                                <th class="w-50">Time per block (seconds):</th>
+                                <td>
+                                    <input type="number" class="form border border-dark requalifying" name="requalifying">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-sm-3 p-0">
+                        <button type="submit" class="btn btn-success h-100 text-sm w-100 rounded-0" id="save-settings">SAVE SETTINGS</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3" style="background:#8cd98c">
+                        <table class="w-100 bg-transparent">
+                            <tr>
+                                <th class="text-right">Minimum&nbsp;price change %&nbsp;</th>
                                 <td class="w-50">
                                     <input type="text" class="form border border-dark qvps" name="qvps">
                                 </td>
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-2 py-2" style="background:#9294C2;">
+                    <div class="col-sm-3" style="background:#8cd98c">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <th class="w-75 p-0">REQUALIFYING FREQUENCY (seconds)</th>
-                                <td class="p-0">
-                                    <input type="number" class="form border border-dark requalifying" name="requalifying">
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-sm-1 pt-1" style="background:#9294C2;">
-                        <table class="w-100 bg-transparent">
-                            <tr>
-                                <th class="p-0 text-xs">
-                                    <center>SORT BY</center>
-                                </th>
-                            </tr>
-                            <tr>
-                                <td class="p-0">
+                                <th>Sort by:</th>
+                                <td>
                                 <select class="form border border-dark sort_by" name="sort_by">
                                         <option value="sym">SYMBOL</option>
-                                        <option value="volume_change">VOLUME CHANGE</option>
-                                        <option value="elapsed_time">ELAPSED TIME</option>
-                                        <option value="accum_change">ACCUM. CHANGE</option>
-                                        <option value="change_percent">CHANGE %</option>
+                                        <option value="change_percent">PRICE GAIN</option>
                                         <option value="change_per_second">CHANGE PER SECOND</option>
                                     </select>
                                 </td>
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-1 pt-3" style="background:#9294C2;">
+                    <div class="col-sm-2" style="background:#8cd98c">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <td class="p-0">
+                                <td colspan="2">
                                     <select class="form border border-dark sort_type" name="sort_type">
                                         <option value="asc">ascending</option>
                                         <option value="desc">descending</option>
@@ -79,7 +77,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-1 pt-1" style="background:#9294C2;">
+                    <div class="col-sm-1 pt-1 d-none" style="background:#9294C2;">
                         <table class="w-100 bg-transparent">
                             <tr>
                                 <th class="p-0 text-xs">
@@ -96,6 +94,13 @@
                             </tr>
                         </table>
                     </div>
+                    <div class="col-sm-4 pt-1" style="background:#8cd98c">
+                        <div class="border border-secondary elapsed d-none rounded-1">
+                            <center>
+                            Time Elapsed <span class="badge badge-success bg-success" style="font-size:11px" id="elapsed"></span>
+                            </center>
+                        </div>
+                    </div>
                     <div class="col-sm-1 py-2 d-none" style="background:#9294C2;">
                         <table class="w-100 bg-transparent">
                             <tr>
@@ -106,9 +111,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-1 p-0">
-                        <button type="submit" class="btn btn-success h-100 text-sm w-100 rounded-0" id="save-settings">SAVE SETTINGS</button>
-                    </div>
+                    
                 </div>
             </form>
             <form action="{{ route('calculate') }}" method="POST" id="form2">
@@ -141,13 +144,13 @@
                             <input type="text" class="form text-sm symbol border border-dark" id="perpetual">
                         </div>
                         <div class="col-sm-1 p-0">
-                            <button type="submit" class="btn btn-primary p-0 py-1 text-sm w-100 h-25" id="search" disabled>SEARCH</button>
+                            <button type="submit" class="btn btn-success p-0 py-1 text-sm w-100 h-25" id="search" disabled>START</button>
                         </div>
                         <div class="col-sm-1 p-0">
-                            <button type="button" class="btn btn-success p-0 py-1 text-sm w-100 h-25" id="sort">SORT BY RANK</button>
+                            <button type="button" class="btn btn-primary p-0 py-1 text-sm w-100 h-25" id="sort">SORT</button>
                         </div>
-                        <div class="col-sm-2 p-0">
-                            <button type="button" class="btn btn-primary p-0 py-1 text-sm w-100 h-25" id="refresh-timer" disabled>RESET REQUALIFYING TIMER</button>
+                        <div class="col-sm-1 p-0">
+                            <button type="button" class="btn btn-danger p-0 py-1 text-sm w-100 h-25" id="refresh-timer" disabled>RESET</button>
                         </div>
                         <div class="col-sm-1 p-0 d-none">
                             <button type="button" class="btn btn-success p-0 py-1 text-sm w-100 d-none" id="start">START <span id="elapsed"></span></button>
@@ -175,11 +178,6 @@
                             </select>
                             
                             <button type="button" class="btn btn-success add-custom-symbol p-0 px-2">+</button>
-                        </div>
-                        <div class="col-sm-3 border border-secondary elapsed d-none rounded-1">
-                            <center>
-                            Time Elapsed <span class="badge badge-success bg-success" id="elapsed"></span>
-                            </center>
                         </div>
                 </div>
             </form>
@@ -309,7 +307,8 @@ function checkIfHasRequalified()
             $('#symbol-'+symbol+'-time').html(now);
         }
     });
-    $('.qualifying_status').html($('.symbols:not(.bg-danger)').length+" token/s...");
+    $('.qualifying_status').remove();
+    // $('.qualifying_status').html($('.symbols:not(.bg-danger)').length+" token/s...");
 
     setTimeout(function(){
         var auto_sort = $('.auto_sort').val();
@@ -474,6 +473,23 @@ function getAverage(symbol, initial, target)
     $('#symbol-'+symbol+'-change').html(c);
     $('#symbol-'+symbol+'-change-percentage').html(cp);
     $('#symbol-'+symbol+'-change-per-second').html(cps);
+
+    var price_change_percentage = $('#symbol-'+symbol+'-price-change-percentage').html();
+
+    if (price_change_percentage !== "") {
+        $('#symbol-'+symbol+'-price-change-percent').html(price_change_percentage);
+    }
+    var html = "";
+
+    if (price_change_percentage !== "" && Math.sign(price_change_percentage) === 1) {
+        html += '<p class="m-0" style="height:15px !important;width:'+(parseFloat(price_change_percentage) * 2)+'% !important;background:green;max-width:100%;"></p>';
+    } else if (price_change_percentage !== "" && Math.sign(price_change_percentage) !== -1) {
+        html += '<p class="m-0" style="height:15px !important;width:'+(Math.abs(price_change_percentage) * 2)+'% !important;background:red;max-width:100%;"></p>';
+    }
+
+    
+
+    $('#symbol-'+symbol+'-indicator').html(html);
 
     if ($('#symbol-'+symbol+'-live-price').val() !== "") {
         $('#symbol-'+symbol+'-live-price').val("");
@@ -651,6 +667,8 @@ function autoSort()
                         $('#symbol-'+e.s+'-elapsed').html(diff);
                         hhmmss(e.s, diff);
                     }
+
+                    $('#symbol-'+e.s+'-price-change-percentage').html(e.P);
                 });
 
                 $('.feed-status').html('receiving token feeds ('+data.length+'/s)...');
@@ -659,48 +677,45 @@ function autoSort()
 
         $(document).on('submit', '#form2', function(e){
             e.preventDefault();
+            $('#search').html('Processing...');
+            $('#search').attr('disabled', true);
+            $('#collection_status').val('volume');
+            $('.elapsed').addClass('d-none');
+            $('.tokens-table').addClass('d-none');
+            $('.reset').trigger('click');
+            $('#perpetual').val("");
+            $('.qualifying_status').html('...');
 
-            if (confirm("Start new search?")) {
-                $('#search').html('Processing...');
-                $('#search').attr('disabled', true);
-                $('#collection_status').val('volume');
-                $('.elapsed').addClass('d-none');
-                $('.tokens-table').addClass('d-none');
-                $('.reset').trigger('click');
-                $('#perpetual').val("");
-                $('.qualifying_status').html('...');
+            clearInterval(interval);
+            clearInterval(averaging);
 
-                clearInterval(interval);
-                clearInterval(averaging);
+            var symbol = $('#symbol-filter').val();
+            $('#symbol').val(symbol);
 
-                var symbol = $('#symbol-filter').val();
-                $('#symbol').val(symbol);
+            var choice = $('.choice:checked').val();
+            $('#choice').val(choice);
 
-                var choice = $('.choice:checked').val();
-                $('#choice').val(choice);
-
-                $.ajax({
-                    url:'{{route("coins-list")}}',
-                    method:'GET',
-                    data:{
-                        symbol:symbol
-                    },
-                    success:function(response){
-                        $('#list-container').html(response);
-                        $('#search').html('SEARCH');
-                        $('#search').attr('disabled', false);
-                        $('#start').removeClass('d-none');
-                        $('#stop').removeClass('d-none');
-                        $('#start-initial').trigger('click');
-                        $('#collection_status').val('volume');
-                        $('.custom').removeClass('d-none');
-                    }, error:function(response){
-                        alert("An error occurred. Re-submit request.");
-                        $('#search').html('SEARCH');
-                        $('#search').attr('disabled', false);
-                    }
-                });
-            }
+            $.ajax({
+                url:'{{route("coins-list")}}',
+                method:'GET',
+                data:{
+                    symbol:symbol
+                },
+                success:function(response){
+                    $('#list-container').html(response);
+                    $('#search').html('START');
+                    $('#search').attr('disabled', false);
+                    $('#start').removeClass('d-none');
+                    $('#stop').removeClass('d-none');
+                    $('#start-initial').trigger('click');
+                    $('#collection_status').val('volume');
+                    $('.custom').removeClass('d-none');
+                }, error:function(response){
+                    alert("An error occurred. Re-submit request.");
+                    $('#search').html('SEARCH');
+                    $('#search').attr('disabled', false);
+                }
+            });
             
         });
 
@@ -776,7 +791,7 @@ function autoSort()
             }, 2000);
 
             setTimeout(function(){
-                $('#refresh-timer').html('RESET REQUALIFYING TIMER');
+                $('#refresh-timer').html('RESET');
                 $('#refresh-timer').attr('disabled', false);
             }, 4000);
         });
@@ -815,8 +830,8 @@ function autoSort()
             var symbols = $('.symbols');
             var live_averaging_time = $('.live_averaging_time').val();
             var duration;
-
-            $('.qualifying_status').html($('.symbols:not(.bg-danger)').length+" token/s qualified...");
+            $('.qualifying_status').remove();
+            // $('.qualifying_status').html($('.symbols:not(.bg-danger)').length+" token/s qualified...");
             $('.tokens-table').removeClass('d-none');
 
             if (live_averaging_time == "") {
@@ -844,7 +859,7 @@ function autoSort()
         $(document).on('click', '#start-initial', function(){
             var perpetual = $('#perpetual').val();
             if (perpetual == "") {
-                $('.qualifying_status').append("Initial volume collection initialized... ");
+                $('.qualifying_status').append("Initial sampling initialized... ");
                 var averaging_time = $('.pre_qualifying').val();
             } else {
                 var averaging_time = $('.requalifying').val();
@@ -881,7 +896,7 @@ function autoSort()
         $(document).on('click', '#start-final', function(){
             var perpetual = $('#perpetual').val();
             if (perpetual == "") {
-                $('.qualifying_status').append("Final volume collection initialized... ");
+                $('.qualifying_status').append("Final sampling initialized... ");
                 var averaging_time = $('.qualifying').val();
             } else {
                 var averaging_time = $('.requalifying').val();
@@ -1016,7 +1031,7 @@ function autoSort()
 
         $(document).on('click','#sort', function(){
             $('.sort').trigger('click');
-            addRanking();
+            // addRanking();
         });
         var sticky = $('.sticky').offset().top;   
         $(window).scroll(function(){

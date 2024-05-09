@@ -9,17 +9,20 @@
             <th class="d-none"></th>
             <th class="d-none">PRE-QUALIFYING AVERAGE</th>
             <th class="d-none">QUALIFYING AVERAGE</th>
-            <th class="volume_change">VOLUME CHANGE</th>
+            <th class="volume_change">PRICE CHANGE</th>
             <th class="d-none"></th>
-            <th>QUALIFYING TIME</th>
-            <th>CURRENT TIME</th>
+            <th class="d-none">QUALIFYING TIME</th>
+            <th class="d-none">CURRENT TIME</th>
             <th class="d-none">ELAPSED (seconds)</th>
-            <th class="elapsed_time">ELAPSED TIME</th>
+            <th class="elapsed_time d-none">ELAPSED TIME</th>
             <th>START PRICE</th>
             <th>LATEST PRICE</th>
-            <th class="accum_change">ACCUM. CHANGE</th>
-            <th class="change_percent" data-sort="desc">CHANGE %</th>
+            <th class="accum_change">ACCUMULATED CHANGE</th>
+            <th class="change_percent" data-sort="desc">PRICE GAIN</th>
             <th class="change_per_second">CHANGE per SECOND</th>
+            <th class="d-none"></th>
+            <th class="d-none"></th>
+            <th class="sort" style="width:500px !important;"></th>
         </tr>
     </thead>
     <tbody class="symbols-body">
@@ -50,16 +53,19 @@
                     <input class="form-control" id="symbol-{{ $symbol }}-live-price" class="live-price">
                 </td>
                 <td class="text-center d-none"><span class="badge bg-secondary text-sm" id="symbol-{{ $symbol }}-time">{{ strtotime(now()->addSeconds($sub)) }}</span></td>
-                <td class="text-center"><span class="badge bg-secondary text-sm" id="symbol-{{ $symbol }}-qualifying-time">{{ now()->addSeconds($sub)->format('h:i:s a') }}</span></td>
-                <td class="text-center"><span class="badge bg-secondary text-sm" id="symbol-{{ $symbol }}-current-time"></span></td>
+                <td class="text-center d-none"><span class="badge bg-secondary text-sm" id="symbol-{{ $symbol }}-qualifying-time">{{ now()->addSeconds($sub)->format('h:i:s a') }}</span></td>
+                <td class="text-center d-none"><span class="badge bg-secondary text-sm" id="symbol-{{ $symbol }}-current-time"></span></td>
                 <td class="text-center d-none" id="symbol-{{ $symbol }}-elapsed"></td>
-                <td class="text-center" id="symbol-{{ $symbol }}-elapsed-time"></td>
+                <td class="text-center d-none" id="symbol-{{ $symbol }}-elapsed-time"></td>
                 <td class="text-center" id="symbol-{{ $symbol }}-price"></td>
                 <td class="text-center" id="symbol-{{ $symbol }}-latest"></td>
                 <td class="text-center d-none" id="symbol-{{ $symbol }}-latest-price"></td>
                 <td class="text-center h4" id="symbol-{{ $symbol }}-change"></td>
                 <td class="text-center h4" id="symbol-{{ $symbol }}-change-percentage"></td>
                 <td class="text-center h4" id="symbol-{{ $symbol }}-change-per-second"></td>
+                <td class="text-center h4 d-none" id="symbol-{{ $symbol }}-price-change-percentage"></td>
+                <td class="text-center h4 d-none" id="symbol-{{ $symbol }}-price-change-percent"></td>
+                <td id="symbol-{{ $symbol }}-indicator"></td>
             </tr>
         @endforeach
     </tbody>

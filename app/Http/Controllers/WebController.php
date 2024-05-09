@@ -46,6 +46,23 @@ class WebController extends Controller
             $setting = json_decode($setting['setting'], true);
         }
 
+        return view('index3', compact('setting', 'symbols', 'customTokens'));
+    }
+
+    public function old(Request $request)
+    {
+        $data = $request->all();
+        $user_id = $this->userId;
+        $setting = Setting::where('user_id', $user_id)->first();
+        $symbols = Symbol::all();
+
+        $customTokens = CustomToken::where('user_id', $user_id)->get();
+
+        if (!empty($setting)) {
+            $setting = $setting->toArray();
+            $setting = json_decode($setting['setting'], true);
+        }
+
         return view('index', compact('setting', 'symbols', 'customTokens'));
     }
 
@@ -119,6 +136,7 @@ class WebController extends Controller
         $now = strtotime(now());
 
         $symbol = strtoupper($data['symbol']) ?? 'ALL';
+        $symbol = 'ALL';
         $symbols = Symbol::when(!empty($symbol) && $symbol !== 'ALL', function($query) use ($symbol){
                             $query->where('symbol', 'LIKE', "%{$symbol}");
                         })->get()
