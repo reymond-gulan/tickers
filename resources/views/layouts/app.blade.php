@@ -50,6 +50,9 @@
             $(document).on("click", "table thead tr th:not(.no-sort)", function() {
                 var table = $(this).parents("table");
                 var rows = $(this).parents("table").find("tbody tr").toArray().sort(TableComparer($(this).index()));
+
+                var sort_by = $('.sort_type').val();
+                var auto_sort = $('.auto_sort').val();
                 
                 if ($(this).hasClass('sort')) {
                     var dir = $('.sort').data('sort');
@@ -57,6 +60,15 @@
                     var dir = ($(this).hasClass("sort-asc")) ? "desc" : "asc";
                 }
 
+                if (auto_sort !== undefined && auto_sort == 'yes') {
+                    if (sort_by !== undefined) {
+                        if (sort_by == 'asc') {
+                            var dir = 'asc';
+                        } else {
+                            var dir = 'desc';
+                        }
+                    }
+                }
 
                 if (dir == "desc") {
                     rows = rows.reverse();
@@ -170,9 +182,6 @@
         padding:5px !important;
         border-radius:50% !important;
         border:1px solid red !important;
-    }
-    .border-bottom-2{
-        border-bottom:2px solid #000 !important;
     }
     </style>
 <body>

@@ -51,11 +51,11 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-3" style="background:#8cd98c">
+                    <div class="col-sm-3 px-0" style="background:#8cd98c">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <th>Sort by:</th>
-                                <td>
+                                <th class="text-right">Sort by:</th>
+                                <td class="w-75">
                                 <select class="form border border-dark sort_by" name="sort_by">
                                         <option value="change_percent" selected>PRICE GAIN</option>
                                         <option value="change_per_second">CHANGE PER SECOND</option>
@@ -64,10 +64,10 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-2" style="background:#8cd98c">
+                    <div class="col-sm-2 px-0" style="background:#8cd98c">
                         <table class="w-100 bg-transparent">
                             <tr>
-                                <td colspan="2">
+                                <td>
                                     <select class="form border border-dark sort_type" name="sort_type">
                                         <option value="asc">ascending</option>
                                         <option value="desc">descending</option>
@@ -76,16 +76,14 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-1 pt-1 d-none" style="background:#9294C2;">
+                    <div class="col-sm-1 pt-1 px-0" style="background:#8cd98c">
                         <table class="w-100 bg-transparent">
                             <tr>
                                 <th class="p-0 text-xs">
                                     <center>AUTO-SORT</center>
                                 </th>
-                            </tr>
-                            <tr>
                                 <td class="p-0">
-                                    <select class="form border border-dark auto_sort" name="auto_sort">
+                                    <select class="form border border-dark auto_sort p-0" name="auto_sort">
                                         <option value="no">no</option>
                                         <option value="yes">yes</option>
                                     </select>
@@ -93,7 +91,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="col-sm-4 pt-1" style="background:#8cd98c">
+                    <div class="col-sm-3 pt-1" style="background:#8cd98c">
                         <div class="border border-secondary elapsed d-none rounded-1">
                             <center>
                             Time Elapsed <span class="badge badge-success bg-success" style="font-size:11px" id="elapsed"></span>
@@ -134,7 +132,7 @@
                             </select>
                         </div>
                         <div class="col-sm-1 p-0">
-                            <input type="number" class="form price_filter border border-dark h-25" name="price_filter" id="price_filter" placeholder="PRICE FILTER">
+                            <input type="text" class="form price_filter border border-dark h-25" name="price_filter" id="price_filter" placeholder="PRICE FILTER">
                         </div>
                         <div class="col-sm-1 p-0 px-2 d-none">
                             <input type="text" class="form text-sm symbol border border-dark" id="symbol" readonly>
@@ -308,13 +306,6 @@ function checkIfHasRequalified()
     });
     $('.qualifying_status').remove();
     // $('.qualifying_status').html($('.symbols:not(.bg-danger)').length+" token/s...");
-
-    setTimeout(function(){
-        var auto_sort = $('.auto_sort').val();
-        if (auto_sort == 'yes') {
-            autoSort();
-        }
-    }, 1000);
 }
 
 
@@ -382,79 +373,19 @@ function getAverage(symbol, initial, target)
     var elapsed = $('#symbol-'+symbol+'-elapsed').html();
     var change_percentage = percentageIncrease(i, j);
     var change_per_second = (change / parseInt(elapsed));
-    
-    // var change = (parseFloat(final) - parseFloat(initial));
-    // var change_percentage = (parseFloat(final) / parseFloat(initial));
-    // var change_per_second = (change_percentage / parseInt(liveAveragingTime));
 
     if (isNaN(qpps) || !isFinite(qpps)) {
         qpps = 0;
     }
 
     $('#symbol-'+symbol+'-qpps').html(qpps.toFixed(2));
-
-    // var blocks = $('#block-count').val();
-    // var choice = $('#choice').val();
-    
-    // if (choice == 'positive') {
-    //     $('#table thead').addClass('text-success').removeClass('text-danger');
-    // } else {
-    //     $('#table thead').removeClass('text-success').addClass('text-danger');
-    // }
-
-    // for(i = 1; i <= blocks;i++)
-    // {
-    //     if ($('#symbol-'+symbol+'-option'+i).html() == "") {
-            
-    //         var optionAverage = $('#symbol-'+symbol+'-option'+i);
-    //         var previousBlock = (i - 1);
-    //         var previous = $('#symbol-'+symbol+'-option'+previousBlock).html();
-    //         if (i == 1) {
-    //             optionAverage.removeClass('badge bg-success').removeClass('badge bg-danger');
-    //         } else {
-    //             if (parseFloat(increase) == 0) {
-    //                 optionAverage.removeClass('badge bg-success').removeClass('badge bg-danger');
-
-    //                 // if (choice == 'positive') {
-    //                 //     $('#symbol-'+symbol).addClass('d-none');
-    //                 // }
-
-    //             } else if (parseFloat(previous) < parseFloat(increase)) {
-    //                 optionAverage.addClass('badge bg-success').removeClass('bg-danger');
-
-    //                 // if (choice == 'negative') {
-    //                 //     $('#symbol-'+symbol).addClass('d-none');
-    //                 // }
-
-    //             } else if (parseFloat(previous) > parseFloat(increase)) {
-    //                 optionAverage.removeClass('bg-success').addClass('badge bg-danger');
-                    
-    //                 if (choice == 'positive') {
-    //                     $('#symbol-'+symbol).addClass('d-none');
-    //                 }
-
-    //             } else {
-    //                 optionAverage.removeClass('badge bg-success').removeClass('badge bg-danger');
-    //             }
-    //         }
-
-    //         if (isNaN(increase)) {
-    //             increase = 0;
-    //         }
-    
-    //         $('#symbol-'+symbol+'-latest-price').html(increase);
-    //         optionAverage.html(increase);
-    //         break;
-    //     }
-    // }
-
     if (isNaN(increase)) {
         increase = 0;
     }
 
     var c = change.toFixed(5);
     var cp = change_percentage;
-    var cps = change_per_second.toFixed(5);
+    var cps = change_per_second.toFixed(10);
 
     if (isNaN(c)) {
         c = 0;
@@ -478,7 +409,6 @@ function getAverage(symbol, initial, target)
     var sort_by = $('.sort_by').val();
 
     if (sort_by === 'change_per_second') {
-        console.log(sort_by);
         if (Math.sign(cps) === 1) {
             html += '<p class="m-0 bar" data-symbol="'+symbol+'" style="height:15px !important;cursor:pointer;width:'+(parseFloat(cps) * 10)+'% !important;background:green;max-width:100%;"></p>';
         } else if (Math.sign(cps) === -1) {
@@ -491,6 +421,16 @@ function getAverage(symbol, initial, target)
 
     if ($('#symbol-'+symbol+'-live-price').val() !== "") {
         $('#symbol-'+symbol+'-live-price').val("");
+    }
+
+    $('#symbol-'+symbol+'-price').removeClass('text-danger');
+
+    var latest_price = $('#symbol-'+symbol+'-latest').html();
+    var start_price = $('#symbol-'+symbol+'-price').html();
+
+    if (parseFloat(start_price) > parseFloat(latest_price)) {
+        $('#symbol-'+symbol+'-price').html(latest_price);
+        $('#symbol-'+symbol+'-price').addClass('text-danger');
     }
 }
 
@@ -560,18 +500,6 @@ function hhmmss(symbol, totalSeconds)
     seconds = String(seconds).padStart(2, "0");
     
     $('#symbol-'+symbol+'-elapsed-time').html(hours + ":" + minutes + ":" + seconds);
-}
-
-function autoSort()
-{
-    console.log('auto sort triggered...');
-    var sort_by = $('.sort_by').val();
-    $('.'+sort_by).trigger('click');
-    $('.'+sort_by).addClass('bg-secondary');
-
-    setTimeout(function(){
-        $('.'+sort_by).removeClass('bg-secondary');
-    }, 1000);
 }
 
     $(function(){
@@ -690,9 +618,9 @@ function autoSort()
                         var change_percent = percentageIncrease(start_price, e.c);
                         var html = "";
                         if (change_percent !== "" && Math.sign(change_percent) === 1) {
-                            html += '<p class="m-0 bar" data-symbol="'+e.s+'" style="height:15px !important;cursor:pointer;width:'+(parseFloat(change_percent) * 2)+'% !important;background:green;max-width:100%;"></p>';
+                            html += '<p class="m-0 bar" data-symbol="'+e.s+'" style="height:15px !important;cursor:pointer;width:'+(parseFloat(change_percent) * 3)+'% !important;background:green;max-width:100%;"></p>';
                         } else if (change_percent !== "" && Math.sign(change_percent) === -1) {
-                            html += '<p class="m-0 bar" data-symbol="'+e.s+'" style="height:15px !important;cursor:pointer;width:'+(Math.abs(change_percent) * 2)+'% !important;background:red;max-width:100%;"></p>';
+                            html += '<p class="m-0 bar" data-symbol="'+e.s+'" style="height:15px !important;cursor:pointer;width:'+(Math.abs(change_percent) * 3)+'% !important;background:red;max-width:100%;"></p>';
                         }
                         $('#symbol-'+e.s+'-indicator').html(html);
                         $('#symbol-'+e.s+'-volume-average').html(e.P);
@@ -886,6 +814,11 @@ function autoSort()
                         getAverage(symbol, initial);
                         priceFilter();
                     });
+                    
+                    setTimeout(function(){
+                        $('#sort').trigger('click');
+                    }, 2000);
+
                 }, duration);
             }
         });
@@ -1065,13 +998,19 @@ function autoSort()
         });
 
         $(document).on('click','#sort', function(){
-            var sort_by = $('.sort_by').val();
-            if (sort_by === 'change_per_second') {
-                $('.change_per_second').trigger('click');
-            } else {
-                $('.change_percent').trigger('click');
+            var auto_sort = $('.auto_sort').val();
+
+            if (auto_sort == 'yes') {
+                var sort_by = $('.sort_by').val();
+                if (sort_by === 'change_per_second') {
+                    $('.change_per_second').trigger('click');
+                } else {
+                    $('.change_percent').trigger('click');
+                }
             }
-            // addRanking();
+            setTimeout(function(){
+                addRanking();
+            }, 1000);
         });
         var sticky = $('.sticky').offset().top;   
         $(window).scroll(function(){

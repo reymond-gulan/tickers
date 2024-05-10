@@ -22,7 +22,7 @@
             <th style="width:60px !important;" class="change_per_second">CHANGE % per SECOND</th>
             <th class="d-none"></th>
             <th class="sort d-none"></th>
-            <th class="dummy-sort"></th>
+            <th></th>
         </tr>
     </thead>
     <tbody class="symbols-body">
@@ -30,7 +30,7 @@
             @php
                 $symbol = $symbol['symbol'];
             @endphp
-            <tr data-symbol="{{ $symbol }}" id="symbol-{{ $symbol }}" class="symbols border-bottom-2">
+            <tr data-symbol="{{ $symbol }}" id="symbol-{{ $symbol }}" class="symbols border border-secondary">
                 <td class="text-center" id="symbol-{{ $symbol }}-ranking" class="ranking"></td>
                 <td class="text-center">
                     <b>
