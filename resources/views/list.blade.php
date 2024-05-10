@@ -15,10 +15,10 @@
             <th class="d-none">CURRENT TIME</th>
             <th class="d-none">ELAPSED (seconds)</th>
             <th class="elapsed_time d-none">ELAPSED TIME</th>
-            <th style="width:60px !important;">START<br /> PRICE</th>
-            <th style="width:60px !important;">LATEST<br /> PRICE</th>
+            <th style="width:60px !important;">$ START<br /> PRICE</th>
+            <th style="width:60px !important;">$ LATEST<br /> PRICE</th>
             <th style="width:60px !important;" class="volume_change">PRICE <br />CHANGE</th>
-            <th style="width:60px !important;" class="change_percent">GAIN/LOSS</th>
+            <th style="width:60px !important;" class="change_percent">GAIN/LOSS <br />%</th>
             <th style="width:60px !important;" class="change_per_second">CHANGE % per SECOND</th>
             <th></th>
         </tr>
