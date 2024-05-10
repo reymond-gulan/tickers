@@ -379,9 +379,7 @@ function getAverage(symbol, initial, target)
 
     $('#symbol-'+symbol+'-latest-price').html(increase);
 
-    if($('#symbol-'+symbol+'-change-per-second').html() == "") {
-        $('#symbol-'+symbol+'-change-per-second').html(cps); 
-    }
+    $('#symbol-'+symbol+'-change-per-second').html(cps);
 
     var html = "";
 
@@ -561,12 +559,7 @@ function hhmmss(symbol, totalSeconds)
 
                     collectVolume(e.s, parseFloat(e.v));
 
-                    // Remove
-                    if ($('#symbol-'+e.s+'-change-per-second').html() == "") {
-                        $('#symbol-'+e.s+'-latest').html(e.c);
-                    }
-
-                    // $('#symbol-'+e.s+'-latest').html(e.c);
+                    $('#symbol-'+e.s+'-latest').html(e.c);
 
                     var start_price = $('#symbol-'+e.s+'-price').html();
 
