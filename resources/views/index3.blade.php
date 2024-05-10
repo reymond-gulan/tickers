@@ -309,7 +309,7 @@ function checkIfHasRequalified()
 }
 
 
-function percentageIncrease(initial = 0, final = 0)
+function percentageIncrease(initial = 0, final = 0, raw = "")
 {
     var difference = ((final - initial) / initial);
     var percentage = (difference * 100);
@@ -318,7 +318,11 @@ function percentageIncrease(initial = 0, final = 0)
         return 0;
     }
 
-    return percentage.toFixed(2);
+    if (raw == 'true') {
+        return percentage;
+    } else {
+        return percentage.toFixed(2);
+    }
 }
 
 function getAverage(symbol, initial, target)
@@ -369,6 +373,7 @@ function getAverage(symbol, initial, target)
     var i = parseFloat($('#symbol-'+symbol+'-price').html());
     var j = parseFloat($('#symbol-'+symbol+'-latest').html());
 
+    var accum_change = percentageIncrease(i, j, 'true');
     var change = (j - i);
     var elapsed = $('#symbol-'+symbol+'-elapsed').html();
     var change_percentage = percentageIncrease(i, j);
@@ -383,7 +388,8 @@ function getAverage(symbol, initial, target)
         increase = 0;
     }
 
-    var c = change.toFixed(5);
+    var c = accum_change.toFixed(5);
+    // var c = accum_change.toFixed(5);
     var cp = change_percentage;
     var cps = change_per_second.toFixed(10);
 
@@ -400,7 +406,7 @@ function getAverage(symbol, initial, target)
     }
 
     $('#symbol-'+symbol+'-latest-price').html(increase);
-    // $('#symbol-'+symbol+'-change').html(c);
+    $('#symbol-'+symbol+'-change').html(c);
     // $('#symbol-'+symbol+'-change-percentage').html(cp);
     $('#symbol-'+symbol+'-change-per-second').html(cps);
 
@@ -589,10 +595,10 @@ function hhmmss(symbol, totalSeconds)
                     var start_price = $('#symbol-'+e.s+'-price').html();
 
                     if (start_price !== "") {
-                        var change = (parseFloat(e.c) - parseFloat(start_price));
+                        // var change = (parseFloat(e.c) - parseFloat(start_price));
                         var gain_loss = percentageIncrease(start_price, e.c);
 
-                        $('#symbol-'+e.s+'-change').html(change.toFixed(5));
+                        // $('#symbol-'+e.s+'-change').html(change.toFixed(5));
                         $('#symbol-'+e.s+'-change-percentage').html(gain_loss);
                     }
 
@@ -817,6 +823,15 @@ function hhmmss(symbol, totalSeconds)
                     
                     setTimeout(function(){
                         $('#sort').trigger('click');
+
+                        var sort_by = $('.sort_by').val();
+                        if (sort_by == 'change_percent') {
+                            $('.change_percent').addClass('bg-success text-white');
+                            $('.change_per_second').removeClass('bg-success text-white');
+                        } else {
+                            $('.change_per_second').addClass('bg-success text-white');
+                            $('.change_percent').removeClass('bg-success text-white');
+                        }
                     }, 2000);
 
                 }, duration);
