@@ -9,7 +9,7 @@
             <th class="d-none"></th>
             <th class="d-none">PRE-QUALIFYING <br />AVERAGE</th>
             <th class="d-none">QUALIFYING <br />AVERAGE</th>
-            <th style="width:60px !important;" class="volume_change">PRICE <br />CHANGE</th>
+            <th class="d-none"></th>
             <th class="d-none"></th>
             <th class="d-none">QUALIFYING TIME</th>
             <th class="d-none">CURRENT TIME</th>
@@ -17,11 +17,9 @@
             <th class="elapsed_time d-none">ELAPSED TIME</th>
             <th style="width:60px !important;">START<br /> PRICE</th>
             <th style="width:60px !important;">LATEST<br /> PRICE</th>
-            <th style="width:60px !important;" class="accum_change">ACCUMULATED<br /> CHANGE</th>
+            <th style="width:60px !important;" class="volume_change">PRICE <br />CHANGE</th>
             <th style="width:60px !important;" class="change_percent">GAIN/LOSS</th>
             <th style="width:60px !important;" class="change_per_second">CHANGE % per SECOND</th>
-            <th class="d-none"></th>
-            <th class="sort d-none"></th>
             <th></th>
         </tr>
     </thead>
@@ -48,7 +46,6 @@
                 </td>
                 <td class="d-none" id="symbol-{{ $symbol }}-initial-volume-value"><!--- INITIAL VOLUME VALUE --></td>
                 <td class="d-none" id="symbol-{{ $symbol }}-final-volume-value"><!--- FINAL VOLUME VALUE --></td>
-                <td class="text-center" id="symbol-{{ $symbol }}-volume-average"><!--- VOLUME AVERAGE (QVPS) --></td>
                 <td class="d-none">
                     <input class="form-control" id="symbol-{{ $symbol }}-live-price" class="live-price">
                 </td>
@@ -59,12 +56,9 @@
                 <td class="text-center d-none" id="symbol-{{ $symbol }}-elapsed-time"></td>
                 <td class="text-center" id="symbol-{{ $symbol }}-price"></td>
                 <td class="text-center" id="symbol-{{ $symbol }}-latest"></td>
-                <td class="text-center d-none" id="symbol-{{ $symbol }}-latest-price"></td>
-                <td class="text-center h4" id="symbol-{{ $symbol }}-change"></td>
+                <td class="text-center" id="symbol-{{ $symbol }}-volume-average"><!--- VOLUME AVERAGE (QVPS) --></td>
                 <td class="text-center h4" id="symbol-{{ $symbol }}-change-percentage"></td>
                 <td class="text-center h4" id="symbol-{{ $symbol }}-change-per-second"></td>
-                <td class="text-center h4 d-none" id="symbol-{{ $symbol }}-price-change-percentage"></td>
-                <td class="text-center h4 d-none" id="symbol-{{ $symbol }}-price-change-percent"></td>
                 <td id="symbol-{{ $symbol }}-indicator"></td>
             </tr>
         @endforeach

@@ -236,9 +236,6 @@ function volumePercentage()
         var initial = $('#symbol-'+symbol+'-initial-volume-value').html();
         var final = $('#symbol-'+symbol+'-final-volume-value').html();
 
-        // var qvps = (parseFloat(final) / parseFloat(initial)) / parseInt(averaging_time);
-        // var qvps = ((parseFloat(final) / parseFloat(initial)) * 100) / parseInt(averaging_time);
-        // var qvps = (parseFloat(final) / parseFloat(initial));
         var qvps = percentageIncrease(parseFloat(initial), parseFloat(final));
 
         if (isNaN(qvps) || !isFinite(qvps)) {
@@ -254,8 +251,6 @@ function volumePercentage()
                 $('#symbol-'+symbol).addClass('bg-danger');
             }
         }
-
-        // $('#symbol-'+symbol+'-volume-average').html(qvps);
 
         if (length < 1 && perpetual !== 'start') {
             // Final iteration, check if any token is qualified...
@@ -318,11 +313,7 @@ function percentageIncrease(initial = 0, final = 0, raw = "")
         return 0;
     }
 
-    if (raw == 'true') {
-        return percentage;
-    } else {
-        return percentage.toFixed(2);
-    }
+    return percentage.toFixed(2);
 }
 
 function getAverage(symbol, initial, target)
@@ -368,47 +359,29 @@ function getAverage(symbol, initial, target)
 
     var final = (value / count);
     var increase = percentageIncrease(parseFloat(initial), parseFloat(final));
-    var qpps = ((parseFloat(final) / parseFloat(initial)) * 100) / parseInt(liveAveragingTime);
 
     var i = parseFloat($('#symbol-'+symbol+'-price').html());
     var j = parseFloat($('#symbol-'+symbol+'-latest').html());
 
-    var accum_change = percentageIncrease(i, j, 'true');
+    var elapsed = $('.qualifying').val();
     var change = (j - i);
-    var elapsed = $('#symbol-'+symbol+'-elapsed').html();
-    var change_percentage = percentageIncrease(i, j);
     var change_per_second = (change / parseInt(elapsed));
 
-    if (isNaN(qpps) || !isFinite(qpps)) {
-        qpps = 0;
-    }
-
-    $('#symbol-'+symbol+'-qpps').html(qpps.toFixed(2));
     if (isNaN(increase)) {
         increase = 0;
     }
 
-    var c = accum_change.toFixed(5);
-    // var c = accum_change.toFixed(5);
-    var cp = change_percentage;
     var cps = change_per_second.toFixed(10);
-
-    if (isNaN(c)) {
-        c = 0;
-    }
-
-    if (isNaN(cp)) {
-        cp = 0;
-    }
 
     if (isNaN(cps)) {
         cps = 0;
     }
 
     $('#symbol-'+symbol+'-latest-price').html(increase);
-    $('#symbol-'+symbol+'-change').html(c);
-    // $('#symbol-'+symbol+'-change-percentage').html(cp);
-    $('#symbol-'+symbol+'-change-per-second').html(cps);
+
+    if($('#symbol-'+symbol+'-change-per-second').html() == "") {
+        $('#symbol-'+symbol+'-change-per-second').html(cps); 
+    }
 
     var html = "";
 
@@ -429,15 +402,13 @@ function getAverage(symbol, initial, target)
         $('#symbol-'+symbol+'-live-price').val("");
     }
 
-    $('#symbol-'+symbol+'-price').removeClass('text-danger');
-
-    var latest_price = $('#symbol-'+symbol+'-latest').html();
-    var start_price = $('#symbol-'+symbol+'-price').html();
-
-    if (parseFloat(start_price) > parseFloat(latest_price)) {
-        $('#symbol-'+symbol+'-price').html(latest_price);
-        $('#symbol-'+symbol+'-price').addClass('text-danger');
-    }
+    // $('#symbol-'+symbol+'-price').removeClass('text-danger');
+    // var latest_price = $('#symbol-'+symbol+'-latest').html();
+    // var start_price = $('#symbol-'+symbol+'-price').html();
+    // if (parseFloat(start_price) > parseFloat(latest_price)) {
+    //     $('#symbol-'+symbol+'-price').html(latest_price);
+    //     $('#symbol-'+symbol+'-price').addClass('text-danger');
+    // }
 }
 
 function priceFilter()
@@ -590,15 +561,17 @@ function hhmmss(symbol, totalSeconds)
 
                     collectVolume(e.s, parseFloat(e.v));
 
-                    $('#symbol-'+e.s+'-latest').html(e.c);
+                    // Remove
+                    if ($('#symbol-'+e.s+'-change-per-second').html() == "") {
+                        $('#symbol-'+e.s+'-latest').html(e.c);
+                    }
+
+                    // $('#symbol-'+e.s+'-latest').html(e.c);
 
                     var start_price = $('#symbol-'+e.s+'-price').html();
 
                     if (start_price !== "") {
-                        // var change = (parseFloat(e.c) - parseFloat(start_price));
-                        var gain_loss = percentageIncrease(start_price, e.c);
-
-                        // $('#symbol-'+e.s+'-change').html(change.toFixed(5));
+                        var gain_loss = percentageIncrease(parseFloat(start_price), parseFloat(e.c));
                         $('#symbol-'+e.s+'-change-percentage').html(gain_loss);
                     }
 
@@ -621,7 +594,7 @@ function hhmmss(symbol, totalSeconds)
 
                     if (sort_by == 'change_percent') {
                         var change_percent = parseFloat(e.P);
-                        var change_percent = percentageIncrease(start_price, e.c);
+                        var change_percent = percentageIncrease(parseFloat(start_price), parseFloat(e.c));
                         var html = "";
                         if (change_percent !== "" && Math.sign(change_percent) === 1) {
                             html += '<p class="m-0 bar" data-symbol="'+e.s+'" style="height:15px !important;cursor:pointer;width:'+(parseFloat(change_percent) * 3)+'% !important;background:green;max-width:100%;"></p>';
@@ -629,7 +602,6 @@ function hhmmss(symbol, totalSeconds)
                             html += '<p class="m-0 bar" data-symbol="'+e.s+'" style="height:15px !important;cursor:pointer;width:'+(Math.abs(change_percent) * 3)+'% !important;background:red;max-width:100%;"></p>';
                         }
                         $('#symbol-'+e.s+'-indicator').html(html);
-                        $('#symbol-'+e.s+'-volume-average').html(e.P);
                     }
                 });
 
@@ -823,7 +795,6 @@ function hhmmss(symbol, totalSeconds)
                     
                     setTimeout(function(){
                         $('#sort').trigger('click');
-
                         var sort_by = $('.sort_by').val();
                         if (sort_by == 'change_percent') {
                             $('.change_percent').addClass('bg-success text-white');
