@@ -57,8 +57,8 @@
                                 <th class="text-right">Sort by:</th>
                                 <td class="w-75">
                                 <select class="form border border-dark sort_by" name="sort_by">
-                                        <option value="change_percent" selected>PRICE GAIN</option>
-                                        <option value="change_per_second">CHANGE PER SECOND</option>
+                                        <option value="change_percent" selected>GAIN / LOSS</option>
+                                        <option value="change_per_second">CHANGE % per SECOND</option>
                                     </select>
                                 </td>
                             </tr>
