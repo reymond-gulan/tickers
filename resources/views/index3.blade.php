@@ -364,7 +364,7 @@ function getAverage(symbol, initial, target)
     var j = parseFloat($('#symbol-'+symbol+'-latest').html());
 
     var elapsed = $('.qualifying').val();
-    var change = (j - i);
+    var change = ((j - i) / j);
     var change_per_second = (change / parseInt(elapsed));
 
     if (isNaN(increase)) {
@@ -387,9 +387,9 @@ function getAverage(symbol, initial, target)
 
     if (sort_by === 'change_per_second') {
         if (Math.sign(cps) === 1) {
-            html += '<p class="m-0 bar" data-symbol="'+symbol+'" style="height:15px !important;cursor:pointer;width:'+(parseFloat(cps) * 10)+'% !important;background:green;max-width:100%;"></p>';
+            html += '<p class="m-0 bar" data-symbol="'+symbol+'" style="height:15px !important;cursor:pointer;width:'+(parseFloat(cps) * 2)+'% !important;background:green;max-width:100%;"></p>';
         } else if (Math.sign(cps) === -1) {
-            html += '<p class="m-0 bar" data-symbol="'+symbol+'" style="height:15px !important;cursor:pointer;width:'+(Math.abs(cps) * 10)+'% !important;background:red;max-width:100%;"></p>';
+            html += '<p class="m-0 bar" data-symbol="'+symbol+'" style="height:15px !important;cursor:pointer;width:'+(Math.abs(cps) * 2)+'% !important;background:red;max-width:100%;"></p>';
         }
         $('#symbol-'+symbol+'-indicator').html(html);  
     }
